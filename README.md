@@ -2,12 +2,16 @@
 
 A single-page admin dashboard for managing a car wash and automotive maintenance
 business — Executive Dashboard, Car Wash Jobs, Maintenance Jobs, and Customer
-Management, all in one self-contained `index.html`.
+Management.
 
 ## Status: v2
 
-v2 is a full rebuild following a Playwright-based audit of v1. All 15 issues found
-in that audit have been fixed:
+v2 is a full rebuild following a Playwright-based audit of v1, plus a file
+restructure: the original single self-contained `index.html` (with inline
+`<style>` and `<script>` blocks) has been split into `index.html`,
+`css/styles.css`, and `js/script.js` for easier ongoing development.
+
+All 15 issues found in that audit have been fixed:
 
 **Functional bugs**
 - Scroll position now correctly resets to top on page navigation
@@ -59,10 +63,28 @@ in that audit have been fixed:
 
 ## Stack
 
-- Single HTML file, Tailwind CSS (compiled, not CDN)
+- HTML / CSS / JS, split into separate files (see Project structure below)
+- Tailwind CSS, compiled to static CSS — not the runtime CDN script
 - Material Symbols icon font + Plus Jakarta Sans / Hanken Grotesk (Google
   Fonts — only remaining external dependency)
 - Vanilla JS, no framework, no build step required to run it
+
+## Project structure
+
+```
+washtrack/
+├── index.html        HTML structure only — links to css/ and js/
+├── css/
+│   └── styles.css     compiled Tailwind utilities + hand-written app styles
+├── js/
+│   └── script.js      all application logic (navigation, panels, filters,
+│                       pagination, search, toasts)
+├── DESIGN.md          "Luminous Care" design system spec
+└── README.md
+```
+
+`index.html` no longer contains any inline `<style>` or `<script>` blocks —
+everything lives in `css/styles.css` and `js/script.js` respectively.
 
 ## Design system
 
@@ -71,12 +93,13 @@ See [`DESIGN.md`](./DESIGN.md) for the full "Luminous Care" design spec
 
 ## Running it
 
-It's a static file — open `index.html` in a browser, or serve the repo root
-with any static file server. No build step is required to *run* it.
+It's static files — open `index.html` in a browser, or serve the repo root
+with any static file server (e.g. `npx serve .`). No build step is required
+to *run* it.
 
-## Rebuilding the embedded CSS
+## Rebuilding `css/styles.css`
 
-If you edit Tailwind classes in `index.html`, the inline `<style>` block needs
-to be regenerated from a Tailwind config that matches the design tokens in
+If you add new Tailwind utility classes in `index.html`, `css/styles.css`
+needs to be regenerated from a Tailwind config matching the design tokens in
 `DESIGN.md`. (A `package.json` + build script will be added here once the
-project moves to a proper build pipeline.)
+project moves to a proper build pipeline — see the v3 roadmap.)

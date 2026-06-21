@@ -1,0 +1,139 @@
+WASHTRACK PRO — V3 ROADMAP
+Improvements to existing v2 features + net-new feature candidates
+===================================================================
+
+
+20 IMPROVEMENTS (refine what v2 already has)
+===================================================================
+
+Data & State
+-------------
+1. Add localStorage (or a real backend) persistence — right now every
+   filter, page, and "new" record resets on refresh; nothing is saved.
+2. Wire the "Filter by" dropdown on Customers to actually re-sort the
+   table (Total Spend, Last Visit, Date Added) — currently cosmetic.
+3. Replace the 4-5 hardcoded demo rows per table with a real dataset
+   (JSON array driving the DOM) so search/filter/pagination work at
+   real scale instead of against a handful of static rows.
+4. Add empty-state messaging ("No customers match your search") when a
+   filter/search returns zero rows — right now the table just goes blank.
+5. Persist the active page + filter + search term in the URL (query
+   params or hash) so views are bookmarkable and shareable.
+
+Interaction & Forms
+-------------
+6. Turn "New Job," "Register New Customer," "Add Expense," etc. from
+   toast placeholders into real forms with validation.
+7. Replace the native browser `<select>` (sort dropdown) with a styled
+   custom dropdown that matches the Luminous Care design system.
+8. Add a proper confirmation modal for destructive actions (Deactivate
+   Account, Cancel Job) instead of a toast that just describes what
+   would happen.
+9. Add a focus trap inside the open side panels — Tab currently can
+   escape the panel into the page behind it while it's open.
+10. Queue/stack toast notifications properly with a max-visible limit
+    instead of letting them pile up indefinitely if clicked rapidly.
+
+Performance & Architecture
+-------------
+11. Debounce the live search input (currently re-filters on every
+    keystroke with no delay).
+12. Move the duplicated row-rendering HTML (avatars, badges, etc.) into
+    JS template functions instead of hand-written markup per row, so
+    adding a record doesn't mean copy-pasting a table row.
+13. Move inline `onclick="..."` attributes to `addEventListener` calls
+    for cleaner separation of markup/behavior and CSP compatibility.
+14. Set up a real build pipeline (package.json + npm script) to
+    recompile the embedded Tailwind CSS, replacing the manual one-off
+    compile step used to ship v2.
+15. Add a small Playwright test suite to the repo itself (not just used
+    ad hoc) plus a GitHub Actions workflow to run it on every push.
+
+Polish & Accessibility
+-------------
+16. Add real client-side routing (hash or History API) so the browser
+    back/forward buttons work between pages instead of only the sidebar.
+17. Smooth transition/fade animation between page switches instead of
+    an instant hard cut.
+18. Bump the "outline" caption-text color slightly — it sits right at
+    the WCAG AA contrast minimum for small text.
+19. Add a dark mode toggle — `darkMode: "class"` is already configured
+    in the Tailwind config but nothing in the UI switches it on.
+20. Add a favicon, meta description, and Open Graph tags — currently
+    blank/missing, so the browser tab and any shared link look bare.
+
+
+35 NEW FEATURES (net-new capability)
+===================================================================
+
+Core Operations
+-------------
+1. Build out the Inventory module for real (currently a placeholder):
+   add/edit/delete stock items, supplier info, reorder thresholds.
+2. Build out the Service Packages module for real: create/edit pricing
+   tiers and bundles, attach them to jobs.
+3. Full calendar/booking view (week & month) — the current "Today" widget
+   only shows a single day.
+4. Drag-and-drop job assignment board (Kanban-style: Unassigned → In
+   Progress → Done) for dispatching technicians.
+5. Vehicle service history timeline per customer — every past job for
+   every vehicle they own, not just the "last visit" snapshot.
+6. Technician/staff directory — profiles, shift schedules, certifications.
+7. Time clock / attendance tracking for staff.
+8. Equipment maintenance tracking — for the wash bay equipment itself,
+   separate from customer vehicle maintenance jobs.
+
+Customer Experience
+-------------
+9. Customer self-service booking portal (a separate, simpler view
+   customers use to book their own appointments).
+10. Automated SMS/email reminders (appointment confirmations, "your car
+    is ready" notifications).
+11. Digital invoice generation with PDF export/print.
+12. Online payment collection (Stripe/Square integration).
+13. Loyalty/rewards points program tied to customer spend.
+14. Customer reviews & star ratings collection after a completed job.
+15. Photo upload for before/after job documentation, attached to each
+    job record.
+16. Digital signature capture for service sign-off.
+17. Recurring membership/subscription plans (e.g. unlimited monthly
+    wash plans) with automatic billing.
+
+Business & Fleet Tools
+-------------
+18. Fleet account management — corporate customers with multiple
+    vehicles billed under one account.
+19. Multi-location support — manage several car wash branches from one
+    login, with per-location dashboards.
+20. Supplier/vendor management with purchase order tracking, separate
+    from simple low-stock alerts.
+21. Commission/payroll calculation for technicians based on completed
+    jobs.
+22. Referral program tracking (credit for referring new customers).
+23. Marketing tools — promo codes, email campaign sends.
+24. Audit log of staff actions (who changed a price, who cancelled a
+    job, when).
+
+Reporting & Intelligence
+-------------
+25. A real Reports module with charts — revenue trends, job volume over
+    time, technician performance, service-mix trends (the Reports nav
+    item currently just shows a "coming soon" toast).
+26. Exportable PDF/Excel reports, not just the in-app charts.
+27. Predictive inventory reordering (forecast when stock will run out
+    based on booking trends, instead of a static "5 left" warning).
+28. Demand forecasting — suggest staffing levels for upcoming busy days.
+
+Platform & Access
+-------------
+29. User authentication / login screen — there's currently no auth at
+    all, anyone who opens the file is "Alex Rivera, Admin."
+30. Role-based permissions (Admin / Manager / Technician views, each
+    seeing only what they need).
+31. In-app messaging/notes between staff on a job or customer record.
+32. Barcode/QR code scanning for fast vehicle check-in.
+33. Google Calendar (or similar) two-way sync for appointments.
+34. Offline mode with background sync (PWA + service worker), useful
+    for a front-desk tablet with patchy WiFi.
+35. A companion mobile view for technicians — a stripped-down "my jobs
+    today" list optimized for a phone screen.
