@@ -4,6 +4,35 @@ A single-page admin dashboard for managing a car wash and automotive maintenance
 business — Executive Dashboard, Car Wash Jobs, Maintenance Jobs, and Customer
 Management.
 
+## Status: v2.1 — Data & State
+
+Building on v2, this update implements the "Data & State" section of
+`ROADMAP.txt`:
+
+- **Real dataset, not hardcoded markup.** 14 customers, 12 car wash jobs, and
+  8 maintenance jobs now live as JSON in `js/data.js` and are rendered into
+  the DOM by `js/script.js` — adding a record means editing data, not copying
+  table markup.
+- **localStorage persistence.** Data loads from `localStorage` on boot (with
+  the seed dataset as a fallback) and is saved back after any mutation, so
+  state survives a refresh. Try it: open a customer, click "Deactivate
+  Account," then reload the page — the status sticks.
+- **Working sort.** The "Filter by" dropdown on Customers actually re-sorts
+  the table now (Total Spend, Last Visit, Date Added).
+- **Real pagination.** Page numbers, prev/next, and disabled states are all
+  computed from the actual filtered/sorted dataset rather than being static
+  buttons.
+- **Empty states.** Filtering or searching to zero results shows a friendly
+  message instead of a blank table.
+- **Shareable URLs.** The active page, status filter, search term, and
+  pagination page are mirrored into the URL query string (e.g.
+  `?view=customers&status=vip&q=volkov`) and restored on load, so a view can
+  be bookmarked or shared.
+
+`Mark Complete` (car wash / maintenance jobs) and `Deactivate Account`
+(customers) are wired to real mutations against this data layer as a
+demonstration that it's live, not decorative.
+
 ## Status: v2
 
 v2 is a full rebuild following a Playwright-based audit of v1, plus a file
@@ -77,14 +106,17 @@ washtrack/
 ├── css/
 │   └── styles.css     compiled Tailwind utilities + hand-written app styles
 ├── js/
-│   └── script.js      all application logic (navigation, panels, filters,
-│                       pagination, search, toasts)
+│   ├── data.js         seed dataset (customers, car wash jobs, maintenance
+│   │                    jobs) + localStorage load/save helpers
+│   └── script.js       rendering, navigation, panels, filters, pagination,
+│                        search, sort, URL state, toasts
 ├── DESIGN.md          "Luminous Care" design system spec
+├── ROADMAP.txt        v3 planning doc (improvements + new features)
 └── README.md
 ```
 
 `index.html` no longer contains any inline `<style>` or `<script>` blocks —
-everything lives in `css/styles.css` and `js/script.js` respectively.
+everything lives in `css/styles.css` and `js/*.js` respectively.
 
 ## Design system
 

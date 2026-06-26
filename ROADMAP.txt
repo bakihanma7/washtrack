@@ -6,18 +6,18 @@ Improvements to existing v2 features + net-new feature candidates
 20 IMPROVEMENTS (refine what v2 already has)
 ===================================================================
 
-Data & State
+Data & State  [DONE — see README "Status: v2.1"]
 -------------
-1. Add localStorage (or a real backend) persistence — right now every
+1. [x] Add localStorage (or a real backend) persistence — right now every
    filter, page, and "new" record resets on refresh; nothing is saved.
-2. Wire the "Filter by" dropdown on Customers to actually re-sort the
+2. [x] Wire the "Filter by" dropdown on Customers to actually re-sort the
    table (Total Spend, Last Visit, Date Added) — currently cosmetic.
-3. Replace the 4-5 hardcoded demo rows per table with a real dataset
+3. [x] Replace the 4-5 hardcoded demo rows per table with a real dataset
    (JSON array driving the DOM) so search/filter/pagination work at
    real scale instead of against a handful of static rows.
-4. Add empty-state messaging ("No customers match your search") when a
+4. [x] Add empty-state messaging ("No customers match your search") when a
    filter/search returns zero rows — right now the table just goes blank.
-5. Persist the active page + filter + search term in the URL (query
+5. [x] Persist the active page + filter + search term in the URL (query
    params or hash) so views are bookmarkable and shareable.
 
 Interaction & Forms
