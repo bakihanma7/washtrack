@@ -195,6 +195,12 @@ const SEED_DATA = {
       technician: 'Sam Rivers', status: 'completed', statusLabel: 'Completed', statusTone: 'primary',
       start: '09:10 AM', note: 'Completed 9:50 AM', progress: 100, icon: 'car_repair', iconTone: 'tertiary' },
   ],
+
+  expenses: [
+    { id: 'e01', description: 'Car shampoo & wax supplies', category: 'Supplies', amount: 320.00, date: '2023-12-14' },
+    { id: 'e02', description: 'Technician overtime pay', category: 'Labor', amount: 410.00, date: '2023-12-15' },
+    { id: 'e03', description: 'Pressure washer nozzle replacement', category: 'Equipment', amount: 120.00, date: '2023-12-16' },
+  ],
 };
 
 /* ---- Persistence ---- */
@@ -204,6 +210,10 @@ function loadData() {
     if (raw) {
       const parsed = JSON.parse(raw);
       if (parsed && Array.isArray(parsed.customers) && Array.isArray(parsed.carwashJobs) && Array.isArray(parsed.maintenanceJobs)) {
+        if (!Array.isArray(parsed.expenses)) {
+          // Migrate data saved before the expenses feature existed.
+          parsed.expenses = JSON.parse(JSON.stringify(SEED_DATA.expenses));
+        }
         return parsed;
       }
     }
@@ -233,3 +243,122 @@ function resetSeedData() {
 function findCustomer(id) { return DATA.customers.find(c => c.id === id) || null; }
 function findCarwashJob(id) { return DATA.carwashJobs.find(j => j.id === id) || null; }
 function findMaintenanceJob(id) { return DATA.maintenanceJobs.find(j => j.id === id) || null; }
+
+/* ---- ID generation ---- */
+function nextId(prefix, list) {
+  let n = list.length + 1;
+  let id = prefix + String(n).padStart(2, '0');
+  while (list.some(item => item.id === id)) {
+    n++;
+    id = prefix + String(n).padStart(2, '0');
+  }
+  return id;
+}
+
+/* ---- Avatar palette (cycled for new customers so colors stay varied) ---- */
+const AVATAR_PALETTE = [
+  { bg: 'bg-primary/10', text: 'text-primary' },
+  { bg: 'bg-secondary/10', text: 'text-secondary' },
+  { bg: 'bg-tertiary/10', text: 'text-tertiary' },
+  { bg: 'bg-warning-container', text: 'text-warning' },
+  { bg: 'bg-surface-container-high', text: 'text-on-surface-variant' },
+];
+
+function initialsFromName(name) {
+  return name.split(' ').filter(Boolean).slice(0, 2).map(w => w[0].toUpperCase()).join('');
+}
+
+function todayISO() {
+  return new Date().toISOString().slice(0, 10);
+}
+
+function todayLabel() {
+  return new Date().toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' });
+}
+
+/* ---- Create: Customer ---- */
+function createCustomer({ name, email, phone, vehicle, vehicleColor, status }) {
+  const palette = AVATAR_PALETTE[DATA.customers.length % AVATAR_PALETTE.length];
+  const customer = {
+    id: nextId('c', DATA.customers),
+    initials: initialsFromName(name),
+    avatarBg: palette.bg,
+    avatarText: palette.text,
+    name, email, phone,
+    status: status || 'pending',
+    vehicle, vehicleColor: vehicleColor || '—',
+    lastVisit: null, lastVisitLabel: '—', lastVisitNote: 'Awaiting first visit',
+    spend: 0, classification: 'New Signup',
+    memberSince: todayISO(), memberSinceLabel: todayLabel(),
+  };
+  DATA.customers.unshift(customer);
+  saveData();
+  return customer;
+}
+
+/* ---- Create: Car Wash Job ---- */
+function createCarwashJob({ customer, vehicle, service, technician, price, status, start }) {
+  const toneByService = { 'Basic Wash': 'neutral', 'Deluxe Wash': 'primary-container', 'Premium Detail': 'secondary' };
+  const job = {
+    id: nextId('w', DATA.carwashJobs),
+    customer, vehicle,
+    service, serviceTone: toneByService[service] || 'neutral',
+    technician: technician || 'Unassigned',
+    technicianTone: technician ? 'primary' : null,
+    status: status || 'in-progress',
+    start: start || '--:--',
+    price: Number(price) || 0,
+    avatarIcon: 'directions_car', avatarTone: 'primary',
+  };
+  DATA.carwashJobs.unshift(job);
+  saveData();
+  return job;
+}
+
+/* ---- Create: Maintenance Job ---- */
+function createMaintenanceJob({ title, vehicle, technician, status, start, note }) {
+  const labelByStatus = { 'in-progress': 'In Progress', 'waitlist': 'Waitlist', 'quality-control': 'Quality Control', 'completed': 'Completed' };
+  const toneByStatus = { 'in-progress': 'primary', 'waitlist': 'warning', 'quality-control': 'primary', 'completed': 'primary' };
+  const job = {
+    id: nextId('m', DATA.maintenanceJobs),
+    title, vehicle,
+    technician,
+    status: status || 'in-progress',
+    statusLabel: labelByStatus[status] || 'In Progress',
+    statusTone: toneByStatus[status] || 'primary',
+    start: start || '--:--',
+    note: note || '',
+    progress: status === 'completed' ? 100 : (status === 'in-progress' ? 10 : null),
+    icon: 'directions_car', iconTone: 'primary',
+  };
+  DATA.maintenanceJobs.unshift(job);
+  saveData();
+  return job;
+}
+
+/* ---- Create: Expense ---- */
+function createExpense({ description, category, amount }) {
+  const expense = {
+    id: nextId('e', DATA.expenses),
+    description, category: category || 'Other',
+    amount: Number(amount) || 0,
+    date: todayISO(),
+  };
+  DATA.expenses.unshift(expense);
+  saveData();
+  return expense;
+}
+
+function totalExpenses() {
+  return DATA.expenses.reduce((sum, e) => sum + e.amount, 0);
+}
+
+/* ---- Delete: Job cancellation ---- */
+function cancelCarwashJob(id) {
+  DATA.carwashJobs = DATA.carwashJobs.filter(j => j.id !== id);
+  saveData();
+}
+function cancelMaintenanceJob(id) {
+  DATA.maintenanceJobs = DATA.maintenanceJobs.filter(j => j.id !== id);
+  saveData();
+}

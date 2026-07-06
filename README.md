@@ -4,6 +4,45 @@ A single-page admin dashboard for managing a car wash and automotive maintenance
 business — Executive Dashboard, Car Wash Jobs, Maintenance Jobs, and Customer
 Management.
 
+## Status: v2.2 — Interaction & Forms
+
+Building on v2.1, this update implements the "Interaction & Forms" section of
+`ROADMAP.txt`:
+
+- **Real forms, not toast placeholders.** "New Job" (sidebar), "New Wash
+  Job"/"New Service" (dashboard quick actions and the Car Wash page), "Add
+  Expense," and "Register New Customer"/"Add Customer" now open real modal
+  forms with validated fields (required fields, email format, positive
+  numbers) instead of just showing a toast. Submitting a valid form creates
+  a real record in the data layer (`js/data.js`), saves it to `localStorage`,
+  and navigates you to see it.
+  - The "New Job" modal has a Car Wash / Maintenance toggle that swaps the
+    field set for the two job types, so it's one form covering both rather
+    than two near-duplicate ones.
+  - "Add Expense" is wired to the Dashboard's Expenses and Net Profit stat
+    cards, which now update live and persist — a visible way to see the
+    form is doing real work, not just closing a dialog.
+- **Custom dropdown component.** The native `<select>` used for the
+  Customers "Filter by" sort control has been replaced with a
+  dependency-free, keyboard-accessible listbox (`js/dropdown.js`) matching
+  the Luminous Care design tokens. It's also reused for every dropdown-style
+  field inside the new forms (Service Type, Status, Category, etc.) so the
+  whole app has one consistent picker instead of mixing native and custom
+  controls.
+- **Confirmation modals for destructive actions.** "Deactivate Account" and
+  "Cancel Job" now open a confirmation dialog explaining the consequence
+  before anything happens, instead of acting immediately (or, previously,
+  just describing what *would* happen). Cancelling the confirmation leaves
+  the record untouched; confirming performs the action and persists it.
+- **Focus trap on side panels.** Tab/Shift+Tab now cycle within the open
+  Customer Detail and Job Detail side panels instead of escaping into the
+  page behind them — the same trap utility (`attachFocusTrap` in
+  `js/modals.js`) is shared by the panels and every modal.
+- **Toast queue with a visible cap.** Rapid-fire or repeated actions no
+  longer stack an unbounded pile of toast notifications; at most 3 are
+  shown at once, with any more queued and shown in order as earlier ones
+  clear.
+
 ## Status: v2.1 — Data & State
 
 Building on v2, this update implements the "Data & State" section of
@@ -107,9 +146,15 @@ washtrack/
 │   └── styles.css     compiled Tailwind utilities + hand-written app styles
 ├── js/
 │   ├── data.js         seed dataset (customers, car wash jobs, maintenance
-│   │                    jobs) + localStorage load/save helpers
+│   │                    jobs, expenses) + localStorage load/save helpers +
+│   │                    create/cancel mutation functions
+│   ├── dropdown.js      reusable accessible custom dropdown component,
+│   │                    used in place of native <select> elements
+│   ├── modals.js        generic modal shell, shared focus-trap utility,
+│   │                    form validation helpers, and the New Job / New
+│   │                    Customer / Add Expense / confirmation dialogs
 │   └── script.js       rendering, navigation, panels, filters, pagination,
-│                        search, sort, URL state, toasts
+│                        search, sort, URL state, toast queue
 ├── DESIGN.md          "Luminous Care" design system spec
 ├── ROADMAP.txt        v3 planning doc (improvements + new features)
 └── README.md

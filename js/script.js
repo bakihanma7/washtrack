@@ -18,6 +18,8 @@ let state = {
 };
 
 let lastFocusedBeforePanel = null;
+let detailPanelDetachTrap = null;
+let jobPanelDetachTrap = null;
 
 /* ============================================================
    URL persistence
@@ -46,18 +48,41 @@ function writeStateToURL() {
 }
 
 /* ============================================================
-   Toast notifications
+   Toast notifications — queued with a max-visible cap so rapid
+   or repeated actions don't pile up an unbounded stack of toasts.
    ============================================================ */
+const TOAST_MAX_VISIBLE = 3;
+const toastQueue = [];
+let toastVisibleCount = 0;
+
 function toast(message) {
+  toastQueue.push(message);
+  processToastQueue();
+}
+
+function processToastQueue() {
+  while (toastVisibleCount < TOAST_MAX_VISIBLE && toastQueue.length > 0) {
+    const message = toastQueue.shift();
+    showToastElement(message);
+  }
+}
+
+function showToastElement(message) {
   const container = document.getElementById('toastContainer');
   const el = document.createElement('div');
   el.className = 'toast bg-on-surface text-white text-[13px] font-medium px-4 py-3 rounded-xl shadow-2xl max-w-xs';
   el.textContent = message;
   container.appendChild(el);
+  toastVisibleCount++;
+
   setTimeout(() => {
     el.style.transition = 'opacity 0.3s ease';
     el.style.opacity = '0';
-    setTimeout(() => el.remove(), 300);
+    setTimeout(() => {
+      el.remove();
+      toastVisibleCount--;
+      processToastQueue();
+    }, 300);
   }, 2800);
 }
 
@@ -182,8 +207,7 @@ const CUSTOMER_SORTERS = {
 };
 
 function getCustomerSortLabel() {
-  const sel = document.getElementById('customerSortSelect');
-  return (sel && sel.value) || 'Total Spend (High-Low)';
+  return (customerSortDropdown && customerSortDropdown.getValue()) || 'Total Spend (High-Low)';
 }
 
 function filterCustomers() {
@@ -451,6 +475,22 @@ function renderActiveView() {
 }
 
 /* ============================================================
+   Dashboard financial stats — kept live so "Add Expense" has a
+   visible effect instead of being a decorative form.
+   ============================================================ */
+const DASHBOARD_REVENUE = 4250;
+
+function updateDashboardFinancials() {
+  const expensesEl = document.getElementById('statExpenses');
+  const profitEl = document.getElementById('statNetProfit');
+  if (!expensesEl || !profitEl) return;
+  const expenses = totalExpenses();
+  const profit = DASHBOARD_REVENUE - expenses;
+  expensesEl.textContent = '$' + expenses.toLocaleString(undefined, { minimumFractionDigits: 0 });
+  profitEl.textContent = '$' + profit.toLocaleString(undefined, { minimumFractionDigits: 0 });
+}
+
+/* ============================================================
    Filter tabs
    ============================================================ */
 function applyFilterTab(tableKey, status, clickedBtn) {
@@ -497,15 +537,28 @@ function syncFilterTabUI() {
 }
 
 /* ============================================================
-   Customer sort dropdown
+   Customer sort dropdown (custom component, replaces native <select>)
    ============================================================ */
-const sortSelect = document.getElementById('customerSortSelect');
-if (sortSelect) {
-  sortSelect.addEventListener('change', () => {
-    state.pg = 1;
-    renderCustomers();
-    toast('Sorted by ' + sortSelect.value + '.');
+let customerSortDropdown = null;
+const customerSortMount = document.getElementById('customerSortMount');
+if (customerSortMount) {
+  customerSortDropdown = createDropdown({
+    options: [
+      { value: 'Total Spend (High-Low)', label: 'Total Spend (High-Low)' },
+      { value: 'Last Visit', label: 'Last Visit' },
+      { value: 'Date Added', label: 'Date Added' },
+    ],
+    value: 'Total Spend (High-Low)',
+    ariaLabel: 'Sort customers by',
+    buttonClass: 'flex items-center justify-between gap-2 bg-surface-container-lowest border border-outline-variant rounded-lg text-[12px] py-1.5 px-3 min-w-[190px] focus:ring-2 focus:ring-primary-container outline-none hover:bg-surface-container-low transition-colors',
+    listboxClass: 'hidden absolute z-20 mt-1 w-full bg-surface-container-lowest border border-outline-variant rounded-xl shadow-lg py-1 max-h-64 overflow-y-auto',
+    onChange: (value) => {
+      state.pg = 1;
+      renderCustomers();
+      toast('Sorted by ' + value + '.');
+    },
   });
+  customerSortMount.appendChild(customerSortDropdown.root);
 }
 
 /* ============================================================
@@ -559,12 +612,14 @@ function openCustomerDetail(id) {
   panel.classList.add('open');
   panel.setAttribute('aria-hidden', 'false');
   document.getElementById('detailCloseBtn').focus();
+  detailPanelDetachTrap = attachFocusTrap(panel);
 }
 
 function closeDetail() {
   const panel = document.getElementById('detailPanel');
   panel.classList.remove('open');
   panel.setAttribute('aria-hidden', 'true');
+  if (detailPanelDetachTrap) { detailPanelDetachTrap(); detailPanelDetachTrap = null; }
   if (lastFocusedBeforePanel && document.body.contains(lastFocusedBeforePanel)) {
     lastFocusedBeforePanel.focus();
   }
@@ -575,11 +630,19 @@ function deactivateCurrentCustomer() {
   const id = panel.dataset.customerId;
   const c = findCustomer(id);
   if (!c) return;
-  c.status = 'inactive';
-  saveData();
-  toast(c.name + ' has been marked inactive.');
-  closeDetail();
-  renderActiveView();
+  confirmAction({
+    title: 'Deactivate this customer?',
+    message: `${c.name}'s account will be marked inactive. You can reactivate them later from their profile.`,
+    confirmLabel: 'Deactivate',
+    danger: true,
+    onConfirm: () => {
+      c.status = 'inactive';
+      saveData();
+      toast(c.name + ' has been marked inactive.');
+      closeDetail();
+      renderActiveView();
+    },
+  });
 }
 
 /* ============================================================
@@ -620,12 +683,14 @@ function openJobDetail(kind, id) {
   panel.classList.add('open');
   panel.setAttribute('aria-hidden', 'false');
   document.getElementById('jobCloseBtn').focus();
+  jobPanelDetachTrap = attachFocusTrap(panel);
 }
 
 function closeJobDetail() {
   const panel = document.getElementById('jobPanel');
   panel.classList.remove('open');
   panel.setAttribute('aria-hidden', 'true');
+  if (jobPanelDetachTrap) { jobPanelDetachTrap(); jobPanelDetachTrap = null; }
   if (lastFocusedBeforePanel && document.body.contains(lastFocusedBeforePanel)) {
     lastFocusedBeforePanel.focus();
   }
@@ -648,6 +713,27 @@ function markCurrentJobComplete() {
   toast('Job marked as complete.');
   closeJobDetail();
   renderActiveView();
+}
+
+function cancelCurrentJob() {
+  const panel = document.getElementById('jobPanel');
+  const kind = panel.dataset.jobKind;
+  const id = panel.dataset.jobId;
+  const job = kind === 'carwash' ? findCarwashJob(id) : findMaintenanceJob(id);
+  if (!job) return;
+  const label = kind === 'carwash' ? job.service + ' for ' + job.customer : job.title;
+  confirmAction({
+    title: 'Cancel this job?',
+    message: `This will remove "${label}" from the job list. This can't be undone.`,
+    confirmLabel: 'Cancel Job',
+    danger: true,
+    onConfirm: () => {
+      if (kind === 'carwash') cancelCarwashJob(id); else cancelMaintenanceJob(id);
+      toast('Job cancelled.');
+      closeJobDetail();
+      renderActiveView();
+    },
+  });
 }
 
 document.addEventListener('keydown', (e) => {
@@ -705,4 +791,5 @@ document.querySelectorAll('.card-shadow').forEach(card => {
   syncRangeToggleUI();
   navigate(state.view, { keepFilters: true });
   syncFilterTabUI();
+  updateDashboardFinancials();
 })();

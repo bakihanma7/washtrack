@@ -49,7 +49,7 @@
     </button>
   </nav>
 
-  <button type="button" onclick="toast('New job form coming soon.')" class="primary-gradient text-white py-3 rounded-xl font-label-bold flex items-center justify-center gap-2 shadow-lg hover:opacity-90 active:scale-95 transition-all mb-2 overflow-hidden">
+  <button type="button" onclick="openNewJobModal()" class="primary-gradient text-white py-3 rounded-xl font-label-bold flex items-center justify-center gap-2 shadow-lg hover:opacity-90 active:scale-95 transition-all mb-2 overflow-hidden">
     <span class="material-symbols-outlined text-[18px]" aria-hidden="true">add_circle</span> <span class="hidden lg:inline">New Job</span>
   </button>
 
@@ -137,7 +137,7 @@
           <span class="text-error font-label-bold flex items-center gap-1 text-[11px]"><span class="material-symbols-outlined text-[14px]" aria-hidden="true">trending_up</span> $120</span>
         </div>
         <p class="text-outline font-label-bold uppercase tracking-wider mb-1 text-[10px]">Expenses</p>
-        <p class="font-stat-value text-stat-value text-on-surface">$850</p>
+        <p id="statExpenses" class="font-stat-value text-stat-value text-on-surface">$850</p>
         <p class="text-[11px] text-outline mt-1">Supplies &amp; Labor</p>
       </div>
       <div class="bg-surface-container-lowest p-6 rounded-2xl border border-outline-variant card-shadow">
@@ -146,7 +146,7 @@
           <span class="text-secondary font-label-bold flex items-center gap-1 text-[11px]"><span class="material-symbols-outlined text-[14px]" aria-hidden="true">trending_up</span> 18%</span>
         </div>
         <p class="text-outline font-label-bold uppercase tracking-wider mb-1 text-[10px]">Net Profit</p>
-        <p class="font-stat-value text-stat-value text-on-surface">$3,400</p>
+        <p id="statNetProfit" class="font-stat-value text-stat-value text-on-surface">$3,400</p>
         <p class="text-[11px] text-outline mt-1">Current Position</p>
       </div>
       <div class="bg-surface-container-lowest p-6 rounded-2xl border border-outline-variant card-shadow">
@@ -259,19 +259,19 @@
       <div class="lg:col-span-8">
         <h3 class="font-headline-sm text-[18px] text-on-surface mb-5">Quick Actions</h3>
         <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 mb-6">
-          <button type="button" onclick="navigate('carwash')" class="flex flex-col items-center justify-center p-5 bg-surface-container-lowest border border-outline-variant rounded-2xl card-shadow hover:border-primary transition-all group">
+          <button type="button" onclick="openNewJobModal('carwash')" class="flex flex-col items-center justify-center p-5 bg-surface-container-lowest border border-outline-variant rounded-2xl card-shadow hover:border-primary transition-all group">
             <div class="w-11 h-11 rounded-full bg-primary-container/10 flex items-center justify-center text-primary mb-2 group-hover:scale-110 transition-transform overflow-hidden"><span class="material-symbols-outlined text-[20px]" aria-hidden="true">add_circle</span></div>
             <span class="font-label-bold text-center text-[11px]">New Wash Job</span>
           </button>
-          <button type="button" onclick="navigate('maintenance')" class="flex flex-col items-center justify-center p-5 bg-surface-container-lowest border border-outline-variant rounded-2xl card-shadow hover:border-primary transition-all group">
+          <button type="button" onclick="openNewJobModal('maintenance')" class="flex flex-col items-center justify-center p-5 bg-surface-container-lowest border border-outline-variant rounded-2xl card-shadow hover:border-primary transition-all group">
             <div class="w-11 h-11 rounded-full bg-primary/10 flex items-center justify-center text-primary mb-2 group-hover:scale-110 transition-transform overflow-hidden"><span class="material-symbols-outlined text-[20px]" aria-hidden="true">settings_suggest</span></div>
             <span class="font-label-bold text-center text-[11px]">New Service</span>
           </button>
-          <button type="button" onclick="toast('Expense form coming soon.')" class="flex flex-col items-center justify-center p-5 bg-surface-container-lowest border border-outline-variant rounded-2xl card-shadow hover:border-primary transition-all group">
+          <button type="button" onclick="openAddExpenseModal()" class="flex flex-col items-center justify-center p-5 bg-surface-container-lowest border border-outline-variant rounded-2xl card-shadow hover:border-primary transition-all group">
             <div class="w-11 h-11 rounded-full bg-error/10 flex items-center justify-center text-error mb-2 group-hover:scale-110 transition-transform overflow-hidden"><span class="material-symbols-outlined text-[20px]" aria-hidden="true">receipt_long</span></div>
             <span class="font-label-bold text-center text-[11px]">Add Expense</span>
           </button>
-          <button type="button" onclick="navigate('customers')" class="flex flex-col items-center justify-center p-5 bg-surface-container-lowest border border-outline-variant rounded-2xl card-shadow hover:border-primary transition-all group">
+          <button type="button" onclick="openNewCustomerModal()" class="flex flex-col items-center justify-center p-5 bg-surface-container-lowest border border-outline-variant rounded-2xl card-shadow hover:border-primary transition-all group">
             <div class="w-11 h-11 rounded-full bg-secondary/10 flex items-center justify-center text-secondary mb-2 group-hover:scale-110 transition-transform overflow-hidden"><span class="material-symbols-outlined text-[20px]" aria-hidden="true">person_add</span></div>
             <span class="font-label-bold text-center text-[11px]">Add Customer</span>
           </button>
@@ -333,7 +333,7 @@
         <button type="button" onclick="toast('Sorted by newest first.')" class="flex items-center gap-2 px-4 py-2 border border-outline-variant rounded-xl text-on-surface-variant font-label-bold text-[12px] hover:bg-surface-container transition-colors">
           <span class="material-symbols-outlined text-[16px]" aria-hidden="true">sort</span> Sort: Newest
         </button>
-        <button type="button" onclick="toast('New wash job form coming soon.')" class="primary-gradient text-white px-5 py-2.5 rounded-xl font-label-bold text-[12px] shadow hover:shadow-md active:scale-95 transition-all flex items-center gap-2">
+        <button type="button" onclick="openNewJobModal('carwash')" class="primary-gradient text-white px-5 py-2.5 rounded-xl font-label-bold text-[12px] shadow hover:shadow-md active:scale-95 transition-all flex items-center gap-2">
           <span class="material-symbols-outlined text-[16px]" aria-hidden="true">add</span> New Wash Job
         </button>
       </div>
@@ -499,7 +499,7 @@
         <button type="button" onclick="toast('Exporting customer list as CSV…')" class="bg-surface-container-lowest border border-outline-variant px-5 py-2.5 rounded-xl font-label-bold text-label-bold text-on-surface flex items-center gap-2 hover:bg-surface-container-low transition-colors shadow-sm text-[12px]">
           <span class="material-symbols-outlined text-[16px]" aria-hidden="true">file_download</span> Export CSV
         </button>
-        <button type="button" onclick="toast('New customer form coming soon.')" class="primary-gradient text-white px-5 py-2.5 rounded-xl font-label-bold text-label-bold flex items-center gap-2 shadow hover:shadow-md transition-all active:scale-95 text-[12px]">
+        <button type="button" onclick="openNewCustomerModal()" class="primary-gradient text-white px-5 py-2.5 rounded-xl font-label-bold text-label-bold flex items-center gap-2 shadow hover:shadow-md transition-all active:scale-95 text-[12px]">
           <span class="material-symbols-outlined text-[16px]" aria-hidden="true">person_add</span> Register New Customer
         </button>
       </div>
@@ -548,10 +548,8 @@
           <button type="button" class="filter-tab text-on-surface-variant hover:text-primary px-4 py-1.5 rounded-full text-label-bold font-label-bold transition-colors text-[11px]" data-table="customers" data-status="inactive">Inactive</button>
         </div>
         <div class="flex items-center gap-2">
-          <label for="customerSortSelect" class="text-[12px] text-on-surface-variant">Filter by:</label>
-          <select id="customerSortSelect" class="bg-surface-container-lowest border border-outline-variant rounded-lg text-[12px] py-1.5 px-2 focus:ring-primary-container outline-none">
-            <option>Total Spend (High-Low)</option><option>Last Visit</option><option>Date Added</option>
-          </select>
+          <span id="customerSortLabel" class="text-[12px] text-on-surface-variant">Filter by:</span>
+          <div id="customerSortMount" aria-labelledby="customerSortLabel"></div>
         </div>
       </div>
       <div class="overflow-x-auto">
@@ -714,8 +712,16 @@
     </div>
     <div class="pt-4">
       <button type="button" onclick="markCurrentJobComplete()" class="w-full bg-primary-container text-on-primary-container font-label-bold text-[12px] py-3.5 rounded-2xl hover:brightness-95 transition-all shadow-sm">Mark Complete</button>
-      <button type="button" onclick="toast('This would cancel the job in a full implementation.')" class="w-full mt-2.5 text-error font-label-bold text-[12px] py-3 rounded-2xl hover:bg-error-container/20 transition-all">Cancel Job</button>
+      <button type="button" onclick="cancelCurrentJob()" class="w-full mt-2.5 text-error font-label-bold text-[12px] py-3 rounded-2xl hover:bg-error-container/20 transition-all">Cancel Job</button>
     </div>
+  </div>
+</div>
+
+<!-- ═══════════════ GENERIC MODAL (New Job / New Customer / Add Expense / Confirm) ═══════════════ -->
+<div id="modalRoot" class="fixed inset-0 z-[70] hidden" aria-hidden="true">
+  <div id="modalOverlay" class="absolute inset-0 bg-on-surface/40 backdrop-blur-sm"></div>
+  <div class="absolute inset-0 flex items-center justify-center p-4">
+    <div id="modalPanel" role="dialog" aria-modal="true" class="bg-surface-container-lowest rounded-3xl shadow-2xl w-full max-w-md max-h-[90vh] overflow-y-auto p-7" tabindex="-1"></div>
   </div>
 </div>
 
@@ -723,6 +729,8 @@
 <div id="toastContainer" class="fixed bottom-6 right-6 z-[60] flex flex-col gap-2 items-end" aria-live="polite" aria-atomic="true"></div>
 
 <script src="js/data.js"></script>
+<script src="js/dropdown.js"></script>
+<script src="js/modals.js"></script>
 <script src="js/script.js"></script>
 </body>
 </html>

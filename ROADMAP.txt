@@ -20,18 +20,18 @@ Data & State  [DONE — see README "Status: v2.1"]
 5. [x] Persist the active page + filter + search term in the URL (query
    params or hash) so views are bookmarkable and shareable.
 
-Interaction & Forms
+Interaction & Forms  [DONE — see README "Status: v2.2"]
 -------------
-6. Turn "New Job," "Register New Customer," "Add Expense," etc. from
+6. [x] Turn "New Job," "Register New Customer," "Add Expense," etc. from
    toast placeholders into real forms with validation.
-7. Replace the native browser `<select>` (sort dropdown) with a styled
+7. [x] Replace the native browser `<select>` (sort dropdown) with a styled
    custom dropdown that matches the Luminous Care design system.
-8. Add a proper confirmation modal for destructive actions (Deactivate
+8. [x] Add a proper confirmation modal for destructive actions (Deactivate
    Account, Cancel Job) instead of a toast that just describes what
    would happen.
-9. Add a focus trap inside the open side panels — Tab currently can
+9. [x] Add a focus trap inside the open side panels — Tab currently can
    escape the panel into the page behind it while it's open.
-10. Queue/stack toast notifications properly with a max-visible limit
+10. [x] Queue/stack toast notifications properly with a max-visible limit
     instead of letting them pile up indefinitely if clicked rapidly.
 
 Performance & Architecture
