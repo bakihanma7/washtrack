@@ -225,7 +225,7 @@ function openNewJobModal(defaultType) {
         ],
         value: 'Basic Wash', ariaLabel: 'Service type',
         buttonClass: 'w-full flex items-center justify-between gap-2 bg-surface-container-low border border-outline-variant rounded-xl px-3.5 py-2.5 text-[13px] focus:ring-2 focus:ring-primary-container outline-none',
-        listboxClass: 'z-20 mt-1 w-full bg-surface-container-lowest border border-outline-variant rounded-xl shadow-lg py-1 max-h-52 overflow-y-auto',
+        listboxClass: 'hidden absolute z-20 mt-1 w-full bg-surface-container-lowest border border-outline-variant rounded-xl shadow-lg py-1 max-h-52 overflow-y-auto',
       });
       document.getElementById('njService-mount').appendChild(serviceDropdown.root);
 
@@ -237,7 +237,7 @@ function openNewJobModal(defaultType) {
         ],
         value: 'in-progress', ariaLabel: 'Job status',
         buttonClass: 'w-full flex items-center justify-between gap-2 bg-surface-container-low border border-outline-variant rounded-xl px-3.5 py-2.5 text-[13px] focus:ring-2 focus:ring-primary-container outline-none',
-        listboxClass: 'z-20 mt-1 w-full bg-surface-container-lowest border border-outline-variant rounded-xl shadow-lg py-1 max-h-52 overflow-y-auto',
+        listboxClass: 'hidden absolute z-20 mt-1 w-full bg-surface-container-lowest border border-outline-variant rounded-xl shadow-lg py-1 max-h-52 overflow-y-auto',
       });
       document.getElementById('njStatus-mount').appendChild(statusDropdown.root);
     } else {
@@ -258,7 +258,7 @@ function openNewJobModal(defaultType) {
         ],
         value: 'in-progress', ariaLabel: 'Job status',
         buttonClass: 'w-full flex items-center justify-between gap-2 bg-surface-container-low border border-outline-variant rounded-xl px-3.5 py-2.5 text-[13px] focus:ring-2 focus:ring-primary-container outline-none',
-        listboxClass: 'z-20 mt-1 w-full bg-surface-container-lowest border border-outline-variant rounded-xl shadow-lg py-1 max-h-52 overflow-y-auto',
+        listboxClass: 'hidden absolute z-20 mt-1 w-full bg-surface-container-lowest border border-outline-variant rounded-xl shadow-lg py-1 max-h-52 overflow-y-auto',
       });
       document.getElementById('njStatus-mount').appendChild(statusDropdown.root);
     }
@@ -350,7 +350,7 @@ function openNewCustomerModal() {
     ],
     value: 'pending', ariaLabel: 'Customer status',
     buttonClass: 'w-full flex items-center justify-between gap-2 bg-surface-container-low border border-outline-variant rounded-xl px-3.5 py-2.5 text-[13px] focus:ring-2 focus:ring-primary-container outline-none',
-    listboxClass: 'z-20 mt-1 w-full bg-surface-container-lowest border border-outline-variant rounded-xl shadow-lg py-1 max-h-52 overflow-y-auto',
+    listboxClass: 'hidden absolute z-20 mt-1 w-full bg-surface-container-lowest border border-outline-variant rounded-xl shadow-lg py-1 max-h-52 overflow-y-auto',
   });
   document.getElementById('custStatus-mount').appendChild(statusDropdown.root);
 
@@ -414,7 +414,7 @@ function openAddExpenseModal() {
     ],
     value: 'Supplies', ariaLabel: 'Expense category',
     buttonClass: 'w-full flex items-center justify-between gap-2 bg-surface-container-low border border-outline-variant rounded-xl px-3.5 py-2.5 text-[13px] focus:ring-2 focus:ring-primary-container outline-none',
-    listboxClass: 'z-20 mt-1 w-full bg-surface-container-lowest border border-outline-variant rounded-xl shadow-lg py-1 max-h-52 overflow-y-auto',
+    listboxClass: 'hidden absolute z-20 mt-1 w-full bg-surface-container-lowest border border-outline-variant rounded-xl shadow-lg py-1 max-h-52 overflow-y-auto',
   });
   document.getElementById('expCategory-mount').appendChild(categoryDropdown.root);
 
