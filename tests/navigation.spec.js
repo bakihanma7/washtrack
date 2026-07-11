@@ -28,9 +28,8 @@ test.describe('Navigation', () => {
 
   test('scroll position resets to top when navigating to a new page', async ({ page }) => {
     await page.locator('[data-page="customers"]').click();
-    await page.mouse.wheel(0, 1200);
-    const scrolledY = await page.evaluate(() => window.scrollY);
-    expect(scrolledY).toBeGreaterThan(0);
+    await page.evaluate(() => window.scrollTo(0, 1200));
+    await expect.poll(() => page.evaluate(() => window.scrollY)).toBeGreaterThan(0);
 
     await page.locator('[data-page="carwash"]').click();
     await expect.poll(() => page.evaluate(() => window.scrollY)).toBe(0);

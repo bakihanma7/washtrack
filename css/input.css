@@ -45,3 +45,17 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible, select:focus-vi
 @keyframes modal-in { from { opacity: 0; transform: scale(0.96); } to { opacity: 1; transform: scale(1); } }
 #modalPanel { animation: modal-in 0.18s cubic-bezier(0.16,1,0.3,1); }
 [role="option"] { outline: none; }
+
+/* Guard against page-level horizontal overflow. Wide <table>s inside an
+   .overflow-x-auto wrapper should scroll within that wrapper, not stretch
+   the page — but WebKit (notably mobile Safari) can size the wrapper by
+   the table's shrink-to-fit content width unless the wrapper is given an
+   explicit width/max-width, since overflow:auto alone doesn't always
+   constrain it there the way it does in Chromium/Firefox. */
+html { overflow-x: hidden; }
+.overflow-x-auto {
+  width: 100%;
+  max-width: 100%;
+  -webkit-overflow-scrolling: touch;
+}
+

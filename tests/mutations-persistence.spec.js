@@ -9,7 +9,7 @@ test.describe('Mutations & persistence', () => {
 
   test('registering a new customer adds a row and persists across reload', async ({ page }) => {
     await page.goto('/?view=customers');
-    await page.locator('[data-action="openNewCustomerModal"]').click();
+    await page.locator('#page-customers [data-action="openNewCustomerModal"]').click();
 
     await page.locator('#custName').fill('Priya Testworth');
     await page.locator('#custEmail').fill('priya.testworth@example.com');
@@ -35,7 +35,7 @@ test.describe('Mutations & persistence', () => {
 
   test('creating a new car wash job navigates to the jobs table and shows the new row', async ({ page }) => {
     await page.goto('/?view=dashboard');
-    await page.locator('[data-action="openNewJobModal"][data-arg="carwash"]').click();
+    await page.locator('#page-dashboard [data-action="openNewJobModal"][data-arg="carwash"]').click();
 
     await page.locator('#njCustomerName').fill('Test Customer Alpha');
     await page.locator('#njVehicle').fill('2022 Kia EV6 • Test Blue');
@@ -48,7 +48,7 @@ test.describe('Mutations & persistence', () => {
 
   test('required-field validation blocks submission with an empty form', async ({ page }) => {
     await page.goto('/?view=customers');
-    await page.locator('[data-action="openNewCustomerModal"]').click();
+    await page.locator('#page-customers [data-action="openNewCustomerModal"]').click();
     await page.locator('#newCustomerForm button[type="submit"]').click();
     // Modal should still be open — submission was blocked.
     await expect(page.locator('#modalRoot')).not.toHaveClass(/hidden/);
