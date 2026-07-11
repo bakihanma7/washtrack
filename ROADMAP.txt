@@ -34,19 +34,19 @@ Interaction & Forms  [DONE — see README "Status: v2.2"]
 10. [x] Queue/stack toast notifications properly with a max-visible limit
     instead of letting them pile up indefinitely if clicked rapidly.
 
-Performance & Architecture
+Performance & Architecture  [DONE — see README "Status: v2.3"]
 -------------
-11. Debounce the live search input (currently re-filters on every
+11. [x] Debounce the live search input (currently re-filters on every
     keystroke with no delay).
-12. Move the duplicated row-rendering HTML (avatars, badges, etc.) into
+12. [x] Move the duplicated row-rendering HTML (avatars, badges, etc.) into
     JS template functions instead of hand-written markup per row, so
     adding a record doesn't mean copy-pasting a table row.
-13. Move inline `onclick="..."` attributes to `addEventListener` calls
+13. [x] Move inline `onclick="..."` attributes to `addEventListener` calls
     for cleaner separation of markup/behavior and CSP compatibility.
-14. Set up a real build pipeline (package.json + npm script) to
+14. [x] Set up a real build pipeline (package.json + npm script) to
     recompile the embedded Tailwind CSS, replacing the manual one-off
     compile step used to ship v2.
-15. Add a small Playwright test suite to the repo itself (not just used
+15. [x] Add a small Playwright test suite to the repo itself (not just used
     ad hoc) plus a GitHub Actions workflow to run it on every push.
 
 Polish & Accessibility

@@ -49,16 +49,16 @@
     </button>
   </nav>
 
-  <button type="button" onclick="openNewJobModal()" class="primary-gradient text-white py-3 rounded-xl font-label-bold flex items-center justify-center gap-2 shadow-lg hover:opacity-90 active:scale-95 transition-all mb-2 overflow-hidden">
+  <button type="button" data-action="openNewJobModal" class="primary-gradient text-white py-3 rounded-xl font-label-bold flex items-center justify-center gap-2 shadow-lg hover:opacity-90 active:scale-95 transition-all mb-2 overflow-hidden">
     <span class="material-symbols-outlined text-[18px]" aria-hidden="true">add_circle</span> <span class="hidden lg:inline">New Job</span>
   </button>
 
   <div class="pt-3 border-t border-outline-variant flex flex-col gap-1">
-    <button type="button" onclick="toast('Reports module coming soon.')" class="flex items-center justify-center lg:justify-start gap-3 px-0 lg:px-4 py-2.5 rounded-xl text-on-surface-variant hover:bg-surface-variant select-none w-full overflow-hidden" title="Reports">
+    <button type="button" data-action="toast" data-arg="Reports module coming soon." class="flex items-center justify-center lg:justify-start gap-3 px-0 lg:px-4 py-2.5 rounded-xl text-on-surface-variant hover:bg-surface-variant select-none w-full overflow-hidden" title="Reports">
       <span class="material-symbols-outlined text-[20px]" aria-hidden="true">bar_chart</span>
       <span class="text-body-md hidden lg:inline">Reports</span>
     </button>
-    <button type="button" onclick="toast('Settings coming soon.')" class="flex items-center justify-center lg:justify-start gap-3 px-0 lg:px-4 py-2.5 rounded-xl text-on-surface-variant hover:bg-surface-variant select-none w-full overflow-hidden" title="Settings">
+    <button type="button" data-action="toast" data-arg="Settings coming soon." class="flex items-center justify-center lg:justify-start gap-3 px-0 lg:px-4 py-2.5 rounded-xl text-on-surface-variant hover:bg-surface-variant select-none w-full overflow-hidden" title="Settings">
       <span class="material-symbols-outlined text-[20px]" aria-hidden="true">settings</span>
       <span class="text-body-md hidden lg:inline">Settings</span>
     </button>
@@ -75,20 +75,20 @@
     </div>
   </div>
   <div class="flex items-center gap-2 lg:gap-5 shrink-0">
-    <button type="button" onclick="toast('Report generated and queued for download.')" class="primary-gradient text-white px-3 lg:px-5 py-2 rounded-full font-label-bold text-label-bold shadow hover:shadow-md transition-all active:scale-95 text-[12px] flex items-center gap-1.5">
+    <button type="button" data-action="toast" data-arg="Report generated and queued for download." class="primary-gradient text-white px-3 lg:px-5 py-2 rounded-full font-label-bold text-label-bold shadow hover:shadow-md transition-all active:scale-95 text-[12px] flex items-center gap-1.5">
       <span class="material-symbols-outlined text-[16px]" aria-hidden="true">description</span>
       <span class="hidden md:inline">Generate Report</span>
     </button>
     <div class="flex items-center gap-1 lg:gap-3 text-on-surface-variant">
-      <button type="button" onclick="toast('Help center coming soon.')" aria-label="Help" class="hover:text-primary transition-colors w-9 h-9 flex items-center justify-center rounded-full hover:bg-surface-container">
+      <button type="button" data-action="toast" data-arg="Help center coming soon." aria-label="Help" class="hover:text-primary transition-colors w-9 h-9 flex items-center justify-center rounded-full hover:bg-surface-container">
         <span class="material-symbols-outlined text-[20px]" aria-hidden="true">help</span>
       </button>
-      <button type="button" onclick="toast('You have no new notifications.')" aria-label="Notifications" class="hover:text-primary transition-colors relative w-9 h-9 flex items-center justify-center rounded-full hover:bg-surface-container">
+      <button type="button" data-action="toast" data-arg="You have no new notifications." aria-label="Notifications" class="hover:text-primary transition-colors relative w-9 h-9 flex items-center justify-center rounded-full hover:bg-surface-container">
         <span class="material-symbols-outlined text-[20px]" aria-hidden="true">notifications</span>
         <span class="absolute top-1.5 right-1.5 w-2 h-2 bg-error rounded-full border-2 border-surface" aria-hidden="true"></span>
       </button>
       <div class="h-7 w-px bg-outline-variant hidden md:block"></div>
-      <button type="button" onclick="toast('Account menu coming soon.')" class="flex items-center gap-2.5 cursor-pointer group min-w-0">
+      <button type="button" data-action="toast" data-arg="Account menu coming soon." class="flex items-center gap-2.5 cursor-pointer group min-w-0">
         <div class="text-right hidden md:block min-w-0">
           <p class="font-label-bold text-label-bold text-on-surface leading-tight truncate">Alex Rivera</p>
           <p class="text-[10px] text-on-surface-variant truncate">Admin</p>
@@ -166,7 +166,7 @@
       <div class="lg:col-span-4 bg-surface-container-lowest p-6 rounded-2xl border border-outline-variant card-shadow">
         <div class="flex justify-between items-center mb-6">
           <h3 class="font-headline-sm text-headline-sm text-on-surface">Service Mix</h3>
-          <button type="button" onclick="toast('Detailed breakdown coming soon.')" aria-label="More options for Service Mix" class="text-outline cursor-pointer hover:text-primary transition-colors w-8 h-8 flex items-center justify-center rounded-full hover:bg-surface-container-low">
+          <button type="button" data-action="toast" data-arg="Detailed breakdown coming soon." aria-label="More options for Service Mix" class="text-outline cursor-pointer hover:text-primary transition-colors w-8 h-8 flex items-center justify-center rounded-full hover:bg-surface-container-low">
             <span class="material-symbols-outlined" aria-hidden="true">more_horiz</span>
           </button>
         </div>
@@ -196,7 +196,7 @@
         <div class="bg-surface-container-lowest rounded-2xl border border-outline-variant card-shadow overflow-hidden">
           <div class="px-5 py-4 border-b border-outline-variant flex justify-between items-center bg-surface-container-low/50">
             <div class="flex items-center gap-2"><span class="material-symbols-outlined text-secondary" aria-hidden="true">local_car_wash</span><h3 class="font-headline-sm text-[18px] text-on-surface">Car Wash Services</h3></div>
-            <button type="button" class="text-primary font-label-bold flex items-center gap-1 hover:underline text-[12px]" onclick="navigate('carwash')">View All <span class="material-symbols-outlined text-[14px]" aria-hidden="true">arrow_forward</span></button>
+            <button type="button" class="text-primary font-label-bold flex items-center gap-1 hover:underline text-[12px]" data-action="navigate" data-arg="carwash">View All <span class="material-symbols-outlined text-[14px]" aria-hidden="true">arrow_forward</span></button>
           </div>
           <div class="overflow-x-auto">
           <table class="w-full text-left">
@@ -254,28 +254,28 @@
             <span class="text-error font-bold text-[12px]">3 Left</span>
           </div>
         </div>
-        <button type="button" onclick="toast('Restock request sent to your supplier.')" class="w-full mt-5 py-2 border border-outline-variant text-outline font-label-bold rounded-xl hover:bg-surface-container-high transition-colors text-[12px]">Restock Inventory</button>
+        <button type="button" data-action="toast" data-arg="Restock request sent to your supplier." class="w-full mt-5 py-2 border border-outline-variant text-outline font-label-bold rounded-xl hover:bg-surface-container-high transition-colors text-[12px]">Restock Inventory</button>
       </div>
       <div class="lg:col-span-8">
         <h3 class="font-headline-sm text-[18px] text-on-surface mb-5">Quick Actions</h3>
         <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 mb-6">
-          <button type="button" onclick="openNewJobModal('carwash')" class="flex flex-col items-center justify-center p-5 bg-surface-container-lowest border border-outline-variant rounded-2xl card-shadow hover:border-primary transition-all group">
+          <button type="button" data-action="openNewJobModal" data-arg="carwash" class="flex flex-col items-center justify-center p-5 bg-surface-container-lowest border border-outline-variant rounded-2xl card-shadow hover:border-primary transition-all group">
             <div class="w-11 h-11 rounded-full bg-primary-container/10 flex items-center justify-center text-primary mb-2 group-hover:scale-110 transition-transform overflow-hidden"><span class="material-symbols-outlined text-[20px]" aria-hidden="true">add_circle</span></div>
             <span class="font-label-bold text-center text-[11px]">New Wash Job</span>
           </button>
-          <button type="button" onclick="openNewJobModal('maintenance')" class="flex flex-col items-center justify-center p-5 bg-surface-container-lowest border border-outline-variant rounded-2xl card-shadow hover:border-primary transition-all group">
+          <button type="button" data-action="openNewJobModal" data-arg="maintenance" class="flex flex-col items-center justify-center p-5 bg-surface-container-lowest border border-outline-variant rounded-2xl card-shadow hover:border-primary transition-all group">
             <div class="w-11 h-11 rounded-full bg-primary/10 flex items-center justify-center text-primary mb-2 group-hover:scale-110 transition-transform overflow-hidden"><span class="material-symbols-outlined text-[20px]" aria-hidden="true">settings_suggest</span></div>
             <span class="font-label-bold text-center text-[11px]">New Service</span>
           </button>
-          <button type="button" onclick="openAddExpenseModal()" class="flex flex-col items-center justify-center p-5 bg-surface-container-lowest border border-outline-variant rounded-2xl card-shadow hover:border-primary transition-all group">
+          <button type="button" data-action="openAddExpenseModal" class="flex flex-col items-center justify-center p-5 bg-surface-container-lowest border border-outline-variant rounded-2xl card-shadow hover:border-primary transition-all group">
             <div class="w-11 h-11 rounded-full bg-error/10 flex items-center justify-center text-error mb-2 group-hover:scale-110 transition-transform overflow-hidden"><span class="material-symbols-outlined text-[20px]" aria-hidden="true">receipt_long</span></div>
             <span class="font-label-bold text-center text-[11px]">Add Expense</span>
           </button>
-          <button type="button" onclick="openNewCustomerModal()" class="flex flex-col items-center justify-center p-5 bg-surface-container-lowest border border-outline-variant rounded-2xl card-shadow hover:border-primary transition-all group">
+          <button type="button" data-action="openNewCustomerModal" class="flex flex-col items-center justify-center p-5 bg-surface-container-lowest border border-outline-variant rounded-2xl card-shadow hover:border-primary transition-all group">
             <div class="w-11 h-11 rounded-full bg-secondary/10 flex items-center justify-center text-secondary mb-2 group-hover:scale-110 transition-transform overflow-hidden"><span class="material-symbols-outlined text-[20px]" aria-hidden="true">person_add</span></div>
             <span class="font-label-bold text-center text-[11px]">Add Customer</span>
           </button>
-          <button type="button" onclick="toast('Preparing report for printing…')" class="flex flex-col items-center justify-center p-5 bg-primary text-on-primary border border-transparent rounded-2xl card-shadow hover:opacity-90 transition-all group">
+          <button type="button" data-action="toast" data-arg="Preparing report for printing…" class="flex flex-col items-center justify-center p-5 bg-primary text-on-primary border border-transparent rounded-2xl card-shadow hover:opacity-90 transition-all group">
             <div class="w-11 h-11 rounded-full bg-white/20 flex items-center justify-center text-white mb-2 group-hover:scale-110 transition-transform overflow-hidden"><span class="material-symbols-outlined text-[20px]" aria-hidden="true">rocket_launch</span></div>
             <span class="font-label-bold text-center text-[11px]">Print Report</span>
           </button>
@@ -327,13 +327,13 @@
         <button type="button" class="filter-tab px-4 py-2 rounded-xl bg-transparent text-on-surface-variant hover:bg-surface-container font-label-bold text-[12px] transition-colors" data-table="carwash" data-status="on-hold">On Hold</button>
       </div>
       <div class="flex items-center gap-3">
-        <button type="button" onclick="toast('Advanced filters coming soon.')" class="flex items-center gap-2 px-4 py-2 border border-outline-variant rounded-xl text-on-surface-variant font-label-bold text-[12px] hover:bg-surface-container transition-colors">
+        <button type="button" data-action="toast" data-arg="Advanced filters coming soon." class="flex items-center gap-2 px-4 py-2 border border-outline-variant rounded-xl text-on-surface-variant font-label-bold text-[12px] hover:bg-surface-container transition-colors">
           <span class="material-symbols-outlined text-[16px]" aria-hidden="true">filter_alt</span> Filters
         </button>
-        <button type="button" onclick="toast('Sorted by newest first.')" class="flex items-center gap-2 px-4 py-2 border border-outline-variant rounded-xl text-on-surface-variant font-label-bold text-[12px] hover:bg-surface-container transition-colors">
+        <button type="button" data-action="toast" data-arg="Sorted by newest first." class="flex items-center gap-2 px-4 py-2 border border-outline-variant rounded-xl text-on-surface-variant font-label-bold text-[12px] hover:bg-surface-container transition-colors">
           <span class="material-symbols-outlined text-[16px]" aria-hidden="true">sort</span> Sort: Newest
         </button>
-        <button type="button" onclick="openNewJobModal('carwash')" class="primary-gradient text-white px-5 py-2.5 rounded-xl font-label-bold text-[12px] shadow hover:shadow-md active:scale-95 transition-all flex items-center gap-2">
+        <button type="button" data-action="openNewJobModal" data-arg="carwash" class="primary-gradient text-white px-5 py-2.5 rounded-xl font-label-bold text-[12px] shadow hover:shadow-md active:scale-95 transition-all flex items-center gap-2">
           <span class="material-symbols-outlined text-[16px]" aria-hidden="true">add</span> New Wash Job
         </button>
       </div>
@@ -380,7 +380,7 @@
           <button type="button" class="filter-tab px-4 py-2 text-on-surface-variant hover:bg-surface-variant rounded-lg font-label-bold text-[12px]" data-table="maintenance" data-status="scheduled">Scheduled</button>
           <button type="button" class="filter-tab px-4 py-2 text-on-surface-variant hover:bg-surface-variant rounded-lg font-label-bold text-[12px]" data-table="maintenance" data-status="history">History</button>
         </div>
-        <button type="button" onclick="toast('Advanced filters coming soon.')" class="flex items-center gap-2 px-5 py-2.5 bg-surface-container-lowest border border-outline-variant rounded-xl font-label-bold text-[12px] hover:bg-surface-container-high transition-colors">
+        <button type="button" data-action="toast" data-arg="Advanced filters coming soon." class="flex items-center gap-2 px-5 py-2.5 bg-surface-container-lowest border border-outline-variant rounded-xl font-label-bold text-[12px] hover:bg-surface-container-high transition-colors">
           <span class="material-symbols-outlined text-[16px]" aria-hidden="true">filter_list</span> Filter
         </button>
       </div>
@@ -419,7 +419,7 @@
         <div class="divide-y divide-outline-variant/50" id="maintenanceJobList">
         </div>
         <div class="p-4 text-center bg-surface-container-lowest border-t border-outline-variant">
-          <button type="button" onclick="toast('Loading all active tickets…')" class="text-primary font-label-bold text-[12px] hover:underline">View All Active Tickets</button>
+          <button type="button" data-action="toast" data-arg="Loading all active tickets…" class="text-primary font-label-bold text-[12px] hover:underline">View All Active Tickets</button>
         </div>
       </div>
 
@@ -429,8 +429,8 @@
           <div class="flex items-center justify-between mb-4">
             <h3 class="font-headline-sm text-headline-sm">Today</h3>
             <div class="flex gap-1">
-              <button type="button" onclick="toast('Showing previous day.')" aria-label="Previous day" class="p-1.5 hover:bg-surface-variant rounded-full"><span class="material-symbols-outlined text-[16px]" aria-hidden="true">chevron_left</span></button>
-              <button type="button" onclick="toast('Showing next day.')" aria-label="Next day" class="p-1.5 hover:bg-surface-variant rounded-full"><span class="material-symbols-outlined text-[16px]" aria-hidden="true">chevron_right</span></button>
+              <button type="button" data-action="toast" data-arg="Showing previous day." aria-label="Previous day" class="p-1.5 hover:bg-surface-variant rounded-full"><span class="material-symbols-outlined text-[16px]" aria-hidden="true">chevron_left</span></button>
+              <button type="button" data-action="toast" data-arg="Showing next day." aria-label="Next day" class="p-1.5 hover:bg-surface-variant rounded-full"><span class="material-symbols-outlined text-[16px]" aria-hidden="true">chevron_right</span></button>
             </div>
           </div>
           <div class="grid grid-cols-7 gap-1 text-center mb-4">
@@ -466,7 +466,7 @@
               <div class="h-1.5 w-full bg-white/30 rounded-full"><div class="h-full w-full bg-white rounded-full"></div></div>
             </div>
           </div>
-          <button type="button" onclick="toast('Optimizing technician schedule…')" class="w-full mt-5 py-3 bg-on-primary-container text-white rounded-xl font-bold hover:opacity-90 transition-opacity text-[13px] relative z-10">Optimize Schedule</button>
+          <button type="button" data-action="toast" data-arg="Optimizing technician schedule…" class="w-full mt-5 py-3 bg-on-primary-container text-white rounded-xl font-bold hover:opacity-90 transition-opacity text-[13px] relative z-10">Optimize Schedule</button>
         </div>
       </div>
 
@@ -477,8 +477,8 @@
           <div class="min-w-0"><h4 class="font-bold text-[14px]">Inventory Low: Synthetic 5W-30 Oil</h4><p class="text-[12px] text-on-surface-variant">Estimated to run out in 3 jobs based on current bookings.</p></div>
         </div>
         <div class="flex gap-3 shrink-0">
-          <button type="button" onclick="toast('Alert dismissed.')" class="px-5 py-2 rounded-xl border border-error text-error font-bold text-[12px] hover:bg-error-container/20 transition-colors">Dismiss</button>
-          <button type="button" onclick="toast('Reorder request sent for Synthetic 5W-30 Oil.')" class="px-5 py-2 rounded-xl bg-error text-white font-bold text-[12px] hover:opacity-90 transition-opacity">Reorder Now</button>
+          <button type="button" data-action="toast" data-arg="Alert dismissed." class="px-5 py-2 rounded-xl border border-error text-error font-bold text-[12px] hover:bg-error-container/20 transition-colors">Dismiss</button>
+          <button type="button" data-action="toast" data-arg="Reorder request sent for Synthetic 5W-30 Oil." class="px-5 py-2 rounded-xl bg-error text-white font-bold text-[12px] hover:opacity-90 transition-opacity">Reorder Now</button>
         </div>
       </div>
     </div>
@@ -496,10 +496,10 @@
         <p class="text-on-surface-variant font-body-md mt-1">Manage and monitor high-value relationships across your service network.</p>
       </div>
       <div class="flex gap-3">
-        <button type="button" onclick="toast('Exporting customer list as CSV…')" class="bg-surface-container-lowest border border-outline-variant px-5 py-2.5 rounded-xl font-label-bold text-label-bold text-on-surface flex items-center gap-2 hover:bg-surface-container-low transition-colors shadow-sm text-[12px]">
+        <button type="button" data-action="toast" data-arg="Exporting customer list as CSV…" class="bg-surface-container-lowest border border-outline-variant px-5 py-2.5 rounded-xl font-label-bold text-label-bold text-on-surface flex items-center gap-2 hover:bg-surface-container-low transition-colors shadow-sm text-[12px]">
           <span class="material-symbols-outlined text-[16px]" aria-hidden="true">file_download</span> Export CSV
         </button>
-        <button type="button" onclick="openNewCustomerModal()" class="primary-gradient text-white px-5 py-2.5 rounded-xl font-label-bold text-label-bold flex items-center gap-2 shadow hover:shadow-md transition-all active:scale-95 text-[12px]">
+        <button type="button" data-action="openNewCustomerModal" class="primary-gradient text-white px-5 py-2.5 rounded-xl font-label-bold text-label-bold flex items-center gap-2 shadow hover:shadow-md transition-all active:scale-95 text-[12px]">
           <span class="material-symbols-outlined text-[16px]" aria-hidden="true">person_add</span> Register New Customer
         </button>
       </div>
@@ -614,7 +614,7 @@
 <div id="detailPanel" class="detail-panel fixed right-0 top-16 h-[calc(100vh-4rem)] w-[22rem] max-w-[90vw] bg-surface-container-lowest border-l border-outline-variant shadow-2xl z-30 p-7 overflow-y-auto" role="dialog" aria-modal="true" aria-label="Customer details" aria-hidden="true">
   <div class="flex items-center justify-between mb-7">
     <h3 class="font-headline-sm text-headline-sm text-on-surface">Customer Insight</h3>
-    <button type="button" id="detailCloseBtn" onclick="closeDetail()" aria-label="Close customer details" class="p-2 hover:bg-surface-container-high rounded-full transition-all">
+    <button type="button" id="detailCloseBtn" data-action="closeDetail" aria-label="Close customer details" class="p-2 hover:bg-surface-container-high rounded-full transition-all">
       <span class="material-symbols-outlined text-[20px]" aria-hidden="true">close</span>
     </button>
   </div>
@@ -666,8 +666,8 @@
       </div>
     </div>
     <div class="pt-4">
-      <button type="button" onclick="toast('Loading full profile…')" class="w-full bg-primary-container text-on-primary-container font-label-bold text-[12px] py-3.5 rounded-2xl hover:brightness-95 transition-all shadow-sm">View Full Profile</button>
-      <button type="button" onclick="deactivateCurrentCustomer()" class="w-full mt-2.5 text-error font-label-bold text-[12px] py-3 rounded-2xl hover:bg-error-container/20 transition-all">Deactivate Account</button>
+      <button type="button" data-action="toast" data-arg="Loading full profile…" class="w-full bg-primary-container text-on-primary-container font-label-bold text-[12px] py-3.5 rounded-2xl hover:brightness-95 transition-all shadow-sm">View Full Profile</button>
+      <button type="button" data-action="deactivateCurrentCustomer" class="w-full mt-2.5 text-error font-label-bold text-[12px] py-3 rounded-2xl hover:bg-error-container/20 transition-all">Deactivate Account</button>
     </div>
   </div>
 </div>
@@ -676,7 +676,7 @@
 <div id="jobPanel" class="detail-panel fixed right-0 top-16 h-[calc(100vh-4rem)] w-[22rem] max-w-[90vw] bg-surface-container-lowest border-l border-outline-variant shadow-2xl z-30 p-7 overflow-y-auto" role="dialog" aria-modal="true" aria-label="Job details" aria-hidden="true">
   <div class="flex items-center justify-between mb-7">
     <h3 class="font-headline-sm text-headline-sm text-on-surface">Job Details</h3>
-    <button type="button" id="jobCloseBtn" onclick="closeJobDetail()" aria-label="Close job details" class="p-2 hover:bg-surface-container-high rounded-full transition-all">
+    <button type="button" id="jobCloseBtn" data-action="closeJobDetail" aria-label="Close job details" class="p-2 hover:bg-surface-container-high rounded-full transition-all">
       <span class="material-symbols-outlined text-[20px]" aria-hidden="true">close</span>
     </button>
   </div>
@@ -711,8 +711,8 @@
       </div>
     </div>
     <div class="pt-4">
-      <button type="button" onclick="markCurrentJobComplete()" class="w-full bg-primary-container text-on-primary-container font-label-bold text-[12px] py-3.5 rounded-2xl hover:brightness-95 transition-all shadow-sm">Mark Complete</button>
-      <button type="button" onclick="cancelCurrentJob()" class="w-full mt-2.5 text-error font-label-bold text-[12px] py-3 rounded-2xl hover:bg-error-container/20 transition-all">Cancel Job</button>
+      <button type="button" data-action="markCurrentJobComplete" class="w-full bg-primary-container text-on-primary-container font-label-bold text-[12px] py-3.5 rounded-2xl hover:brightness-95 transition-all shadow-sm">Mark Complete</button>
+      <button type="button" data-action="cancelCurrentJob" class="w-full mt-2.5 text-error font-label-bold text-[12px] py-3 rounded-2xl hover:bg-error-container/20 transition-all">Cancel Job</button>
     </div>
   </div>
 </div>

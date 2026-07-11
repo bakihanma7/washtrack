@@ -7,7 +7,12 @@ Thumbs.db
 .idea/
 *.swp
 
-# Build artifacts (if a build step is added later)
+# Build artifacts
 node_modules/
 dist/
 *.log
+
+# Playwright
+/test-results/
+/playwright-report/
+/playwright/.cache/

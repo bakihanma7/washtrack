@@ -129,10 +129,55 @@ document.querySelectorAll('[data-page]').forEach(item => {
 });
 
 /* ============================================================
+   Delegated action dispatcher — replaces inline onclick="..."
+   attributes throughout index.html and the modal templates in
+   modals.js with a single addEventListener-based handler. Markup
+   just declares intent (`data-action="fn"` plus an optional
+   `data-arg="value"`); this is the only place that turns that
+   into a function call, which keeps behavior out of markup and
+   works for CSP setups that disallow inline event handlers.
+   Because it's delegated on `document`, it also covers buttons
+   injected later via innerHTML (e.g. modal content) with no need
+   to re-attach listeners each time a modal opens.
+   ============================================================ */
+const ACTIONS = {
+  navigate: (arg) => navigate(arg),
+  toast: (arg) => toast(arg),
+  openNewJobModal: (arg) => openNewJobModal(arg || undefined),
+  openAddExpenseModal: () => openAddExpenseModal(),
+  openNewCustomerModal: () => openNewCustomerModal(),
+  closeModal: () => closeModal(),
+  closeDetail: () => closeDetail(),
+  closeJobDetail: () => closeJobDetail(),
+  deactivateCurrentCustomer: () => deactivateCurrentCustomer(),
+  markCurrentJobComplete: () => markCurrentJobComplete(),
+  cancelCurrentJob: () => cancelCurrentJob(),
+};
+
+document.addEventListener('click', (e) => {
+  const el = e.target.closest('[data-action]');
+  if (!el) return;
+  const handler = ACTIONS[el.dataset.action];
+  if (!handler) return;
+  handler(el.dataset.arg);
+});
+
+/* ============================================================
    Rendering: shared helpers
    ============================================================ */
 function escapeHtml(str) {
   return String(str).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+}
+
+/* Debounce — delays invoking `fn` until `wait` ms have passed since
+   the last call. Used to avoid re-filtering/re-rendering a table on
+   every single keystroke in the search box. */
+function debounce(fn, wait) {
+  let timeoutId = null;
+  return function debounced(...args) {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => fn.apply(this, args), wait);
+  };
 }
 
 function emptyStateRow(colspan, message) {
@@ -753,13 +798,21 @@ function currentViewHasTable() {
   return state.view === 'customers' || state.view === 'carwash' || state.view === 'maintenance';
 }
 
-searchInput.addEventListener('input', () => {
-  state.q = searchInput.value;
-  state.pg = 1;
+const SEARCH_DEBOUNCE_MS = 250;
+const debouncedFilterAndRender = debounce(() => {
   if (currentViewHasTable()) {
     renderActiveView();
     writeStateToURL();
   }
+}, SEARCH_DEBOUNCE_MS);
+
+searchInput.addEventListener('input', () => {
+  // state.q updates immediately so the input never feels laggy;
+  // only the (potentially expensive) re-filter/re-render/URL-write
+  // is debounced so it doesn't run on every single keystroke.
+  state.q = searchInput.value;
+  state.pg = 1;
+  debouncedFilterAndRender();
 });
 
 searchInput.addEventListener('keydown', e => {

@@ -178,7 +178,7 @@ function openNewJobModal(defaultType) {
   const html = `
     <div class="flex items-center justify-between mb-6">
       <h3 class="font-headline-sm text-headline-sm text-on-surface">New Job</h3>
-      <button type="button" onclick="closeModal()" aria-label="Close" class="p-2 hover:bg-surface-container-high rounded-full transition-all">
+      <button type="button" data-action="closeModal" aria-label="Close" class="p-2 hover:bg-surface-container-high rounded-full transition-all">
         <span class="material-symbols-outlined text-[20px]" aria-hidden="true">close</span>
       </button>
     </div>
@@ -189,7 +189,7 @@ function openNewJobModal(defaultType) {
     <form id="newJobForm" novalidate>
       <div id="newJobFields"></div>
       <div class="pt-2 flex gap-3">
-        <button type="button" onclick="closeModal()" class="flex-1 py-3 rounded-2xl border border-outline-variant text-on-surface-variant font-label-bold text-[12px] hover:bg-surface-container-low transition-colors">Cancel</button>
+        <button type="button" data-action="closeModal" class="flex-1 py-3 rounded-2xl border border-outline-variant text-on-surface-variant font-label-bold text-[12px] hover:bg-surface-container-low transition-colors">Cancel</button>
         <button type="submit" class="flex-1 bg-primary text-on-primary font-label-bold text-[12px] py-3 rounded-2xl hover:opacity-90 transition-all shadow-sm">Create Job</button>
       </div>
     </form>
@@ -322,7 +322,7 @@ function openNewCustomerModal() {
   const html = `
     <div class="flex items-center justify-between mb-6">
       <h3 class="font-headline-sm text-headline-sm text-on-surface">Register New Customer</h3>
-      <button type="button" onclick="closeModal()" aria-label="Close" class="p-2 hover:bg-surface-container-high rounded-full transition-all">
+      <button type="button" data-action="closeModal" aria-label="Close" class="p-2 hover:bg-surface-container-high rounded-full transition-all">
         <span class="material-symbols-outlined text-[20px]" aria-hidden="true">close</span>
       </button>
     </div>
@@ -334,7 +334,7 @@ function openNewCustomerModal() {
       ${textFieldHtml({ id: 'custVehicleColor', label: 'Vehicle Color', placeholder: 'e.g. Santorini Black' })}
       ${dropdownFieldHtml({ id: 'custStatus', label: 'Status' })}
       <div class="pt-2 flex gap-3">
-        <button type="button" onclick="closeModal()" class="flex-1 py-3 rounded-2xl border border-outline-variant text-on-surface-variant font-label-bold text-[12px] hover:bg-surface-container-low transition-colors">Cancel</button>
+        <button type="button" data-action="closeModal" class="flex-1 py-3 rounded-2xl border border-outline-variant text-on-surface-variant font-label-bold text-[12px] hover:bg-surface-container-low transition-colors">Cancel</button>
         <button type="submit" class="flex-1 bg-primary text-on-primary font-label-bold text-[12px] py-3 rounded-2xl hover:opacity-90 transition-all shadow-sm">Register Customer</button>
       </div>
     </form>
@@ -388,7 +388,7 @@ function openAddExpenseModal() {
   const html = `
     <div class="flex items-center justify-between mb-6">
       <h3 class="font-headline-sm text-headline-sm text-on-surface">Add Expense</h3>
-      <button type="button" onclick="closeModal()" aria-label="Close" class="p-2 hover:bg-surface-container-high rounded-full transition-all">
+      <button type="button" data-action="closeModal" aria-label="Close" class="p-2 hover:bg-surface-container-high rounded-full transition-all">
         <span class="material-symbols-outlined text-[20px]" aria-hidden="true">close</span>
       </button>
     </div>
@@ -397,7 +397,7 @@ function openAddExpenseModal() {
       ${textFieldHtml({ id: 'expAmount', label: 'Amount ($)', placeholder: 'e.g. 85.00', type: 'number', required: true })}
       ${dropdownFieldHtml({ id: 'expCategory', label: 'Category' })}
       <div class="pt-2 flex gap-3">
-        <button type="button" onclick="closeModal()" class="flex-1 py-3 rounded-2xl border border-outline-variant text-on-surface-variant font-label-bold text-[12px] hover:bg-surface-container-low transition-colors">Cancel</button>
+        <button type="button" data-action="closeModal" class="flex-1 py-3 rounded-2xl border border-outline-variant text-on-surface-variant font-label-bold text-[12px] hover:bg-surface-container-low transition-colors">Cancel</button>
         <button type="submit" class="flex-1 bg-primary text-on-primary font-label-bold text-[12px] py-3 rounded-2xl hover:opacity-90 transition-all shadow-sm">Add Expense</button>
       </div>
     </form>
