@@ -13,6 +13,7 @@ test.describe('Mutations & persistence', () => {
 
     await page.locator('#custName').fill('Priya Testworth');
     await page.locator('#custEmail').fill('priya.testworth@example.com');
+    await page.locator('#custPhone').fill('+1 (555) 987-6543');
     await page.locator('#custVehicle').fill('2025 Rivian R1S');
     await page.locator('#custVehicleColor').fill('Forest Green');
 
