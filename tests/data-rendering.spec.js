@@ -7,7 +7,7 @@ test.describe('Data rendering', () => {
 
   test('customers table renders rows sourced from DATA, not static markup', async ({ page }) => {
     await page.goto('/?view=customers');
-    const rowCount = await page.evaluate(() => window.DATA.customers.length);
+    const rowCount = await page.evaluate(() => DATA.customers.length);
     expect(rowCount).toBeGreaterThan(5);
 
     const visibleRows = page.locator('#customersTableBody tr[data-customer-id]');
@@ -18,14 +18,14 @@ test.describe('Data rendering', () => {
 
   test('car wash jobs table renders from DATA.carwashJobs', async ({ page }) => {
     await page.goto('/?view=carwash');
-    const total = await page.evaluate(() => window.DATA.carwashJobs.length);
+    const total = await page.evaluate(() => DATA.carwashJobs.length);
     expect(total).toBeGreaterThan(0);
     await expect(page.locator('#carwashTableBody tr').first()).toBeVisible();
   });
 
   test('maintenance jobs table renders from DATA.maintenanceJobs', async ({ page }) => {
     await page.goto('/?view=maintenance');
-    const total = await page.evaluate(() => window.DATA.maintenanceJobs.length);
+    const total = await page.evaluate(() => DATA.maintenanceJobs.length);
     expect(total).toBeGreaterThan(0);
   });
 

@@ -16,11 +16,11 @@ test.describe('Mutations & persistence', () => {
     await page.locator('#custVehicle').fill('2025 Rivian R1S');
     await page.locator('#custVehicleColor').fill('Forest Green');
 
-    const beforeCount = await page.evaluate(() => window.DATA.customers.length);
+    const beforeCount = await page.evaluate(() => DATA.customers.length);
     await page.locator('#newCustomerForm button[type="submit"]').click();
 
     await expect(page.locator('#toastContainer')).toContainText('Priya Testworth');
-    const afterCount = await page.evaluate(() => window.DATA.customers.length);
+    const afterCount = await page.evaluate(() => DATA.customers.length);
     expect(afterCount).toBe(beforeCount + 1);
 
     // Confirm it was written to localStorage, then reload and confirm
@@ -29,7 +29,7 @@ test.describe('Mutations & persistence', () => {
     expect(stored.customers?.some((c) => c.name === 'Priya Testworth')).toBe(true);
 
     await page.reload();
-    const persistedCount = await page.evaluate(() => window.DATA.customers.length);
+    const persistedCount = await page.evaluate(() => DATA.customers.length);
     expect(persistedCount).toBe(afterCount);
   });
 
