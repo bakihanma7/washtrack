@@ -3,9 +3,15 @@ const { test, expect } = require('@playwright/test');
 const STORAGE_KEY = 'washtrackpro:data:v1';
 
 test.describe('Mutations & persistence', () => {
-  test.beforeEach(async ({ page }) => {
-    await page.addInitScript(() => localStorage.clear());
-  });
+  // NOTE: unlike the other spec files, this suite doesn't use
+  // page.addInitScript(() => localStorage.clear()) in beforeEach.
+  // addInitScript re-runs on every navigation for the page's
+  // lifetime — including page.reload() — which would wipe out the
+  // very data the "persists across reload" test below just saved,
+  // right before the reloaded page's own scripts run. Each test
+  // already gets a fresh, isolated browser context (and therefore
+  // empty localStorage) by default, so no explicit clear is needed
+  // here at all.
 
   test('registering a new customer adds a row and persists across reload', async ({ page }) => {
     await page.goto('/?view=customers');
