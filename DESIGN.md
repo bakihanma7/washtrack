@@ -13,7 +13,7 @@ colors:
   on-surface-variant: '#3c4a46'
   inverse-surface: '#213145'
   inverse-on-surface: '#eaf1ff'
-  outline: '#6b7a76'
+  outline: '#5c6b67'
   outline-variant: '#bacac5'
   surface-tint: '#006b5f'
   primary: '#006b5f'
@@ -173,3 +173,35 @@ Use the pill shape for status tags (e.g., "In Progress," "Completed"). These sho
 
 ### Charts
 Line and area charts should utilize "smooth" curves (splines) rather than jagged lines. Gradients should be used under line charts to connect the data to the bottom axis visually, using the primary/secondary theme colors.
+
+## Dark Mode — "Luminous Care Night"
+
+Every color token above is implemented as a CSS custom property (an
+`R G B` triplet, e.g. `--color-primary: 0 107 95`) so `tailwind.config.js`
+can reference it as `rgb(var(--color-x) / <alpha-value>)`. `:root` holds
+the light ("Luminous Care") values documented above; `html.dark` redefines
+the same variable names with dark equivalents. Because every existing
+`bg-*`/`text-*`/`border-*` utility already resolves through these
+variables, toggling the `dark` class on `<html>` re-skins the entire app —
+no `dark:`-prefixed utility classes are needed anywhere in the markup.
+
+The dark palette follows Material 3's usual dark-scheme inversion rather
+than a flat brightness flip:
+- **Surfaces** invert to a near-black navy (`#0b1420`) base, with each
+  `surface-container-*` tier getting progressively *lighter* (not darker)
+  moving up in elevation — the opposite direction from the light tiers,
+  which is the standard convention for reading elevation on a dark canvas.
+- **Primary/secondary/tertiary/error/warning** each swap roles: the light
+  scheme's saturated "on-container" text color becomes the dark scheme's
+  bright accent (e.g. primary goes from a deep teal `#006b5f` to a
+  luminous mint `#4fe0c9`), while the light scheme's pastel "container"
+  fill becomes a deep, saturated container in dark mode.
+- **`fixed`/`on-fixed`/`fixed-dim`/`on-fixed-variant` roles are unchanged**
+  between themes by design (that's the point of the "fixed" role in
+  Material 3 — a color that should read consistently regardless of the
+  active theme).
+
+The toggle lives in the top header (sun/moon icon button) and persists via
+`localStorage`; an inline script in `index.html`'s `<head>` applies the
+stored preference (or `prefers-color-scheme` if none is stored) before any
+CSS loads, so there's no flash of the wrong theme on load.

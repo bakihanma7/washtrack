@@ -2,8 +2,31 @@
 <html class="light" lang="en">
 <head>
 <meta charset="utf-8"/>
+<script>
+  // Applied as early as possible (before any CSS loads) so there's no
+  // flash of the wrong theme on load. Mirrors the persistence logic in
+  // js/script.js's toggleTheme()/THEME_STORAGE_KEY.
+  (function () {
+    try {
+      var stored = localStorage.getItem('washtrackpro:theme');
+      var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      var dark = stored ? stored === 'dark' : prefersDark;
+      if (dark) document.documentElement.classList.add('dark');
+    } catch (e) { /* localStorage unavailable — fall back to light */ }
+  })();
+</script>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>WashTrack Pro | Executive Admin</title>
+<meta name="description" content="WashTrack Pro is an admin dashboard for car wash and automotive maintenance businesses — manage customers, car wash jobs, maintenance tickets, and inventory in one place."/>
+<link rel="icon" type="image/svg+xml" href="favicon.svg"/>
+<link rel="alternate icon" href="favicon.svg"/>
+<meta property="og:title" content="WashTrack Pro"/>
+<meta property="og:description" content="An admin dashboard for car wash and automotive maintenance businesses — customers, jobs, and inventory in one place."/>
+<meta property="og:type" content="website"/>
+<meta property="og:url" content="https://bakihanma7.github.io/washtrack/"/>
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="WashTrack Pro"/>
+<meta name="twitter:description" content="An admin dashboard for car wash and automotive maintenance businesses — customers, jobs, and inventory in one place."/>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Hanken+Grotesk:wght@400;600;700&display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
 <link rel="stylesheet" href="css/styles.css">
@@ -80,6 +103,9 @@
       <span class="hidden md:inline">Generate Report</span>
     </button>
     <div class="flex items-center gap-1 lg:gap-3 text-on-surface-variant">
+      <button type="button" id="themeToggle" data-action="toggleTheme" aria-label="Switch to dark mode" aria-pressed="false" class="hover:text-primary transition-colors w-9 h-9 flex items-center justify-center rounded-full hover:bg-surface-container">
+        <span class="material-symbols-outlined text-[20px]" data-theme-icon aria-hidden="true">dark_mode</span>
+      </button>
       <button type="button" data-action="toast" data-arg="Help center coming soon." aria-label="Help" class="hover:text-primary transition-colors w-9 h-9 flex items-center justify-center rounded-full hover:bg-surface-container">
         <span class="material-symbols-outlined text-[20px]" aria-hidden="true">help</span>
       </button>

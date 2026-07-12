@@ -35,7 +35,7 @@ function readStateFromURL() {
   };
 }
 
-function writeStateToURL() {
+function writeStateToURL(push) {
   const p = new URLSearchParams();
   p.set('view', state.view);
   if (state.status && state.status !== 'all') p.set('status', state.status);
@@ -44,7 +44,11 @@ function writeStateToURL() {
   if (state.range && state.range !== 'Today') p.set('range', state.range);
   const qs = p.toString();
   const newUrl = location.pathname + (qs ? '?' + qs : '');
-  history.replaceState(null, '', newUrl);
+  if (push) {
+    history.pushState({ view: state.view }, '', newUrl);
+  } else {
+    history.replaceState({ view: state.view }, '', newUrl);
+  }
 }
 
 /* ============================================================
@@ -121,11 +125,26 @@ function navigate(pageId, opts) {
   if (search) search.value = state.q;
 
   renderActiveView();
-  writeStateToURL();
+  writeStateToURL(!opts.replaceHistory);
 }
 
 document.querySelectorAll('[data-page]').forEach(item => {
   item.addEventListener('click', () => navigate(item.dataset.page));
+});
+
+/* Real back/forward support: popstate fires when the user uses the
+   browser's Back/Forward buttons (or history.back()/forward()). Re-sync
+   in-memory state and the DOM from the URL the browser just navigated
+   to, but don't push a new entry — the browser already moved the
+   history cursor for us. */
+window.addEventListener('popstate', () => {
+  state = readStateFromURL();
+  const search = document.getElementById('globalSearch');
+  if (search) search.value = state.q;
+  syncRangeToggleUI();
+  navigate(state.view, { keepFilters: true, replaceHistory: true });
+  syncFilterTabUI();
+  updateDashboardFinancials();
 });
 
 /* ============================================================
@@ -152,6 +171,7 @@ const ACTIONS = {
   deactivateCurrentCustomer: () => deactivateCurrentCustomer(),
   markCurrentJobComplete: () => markCurrentJobComplete(),
   cancelCurrentJob: () => cancelCurrentJob(),
+  toggleTheme: () => toggleTheme(),
 };
 
 document.addEventListener('click', (e) => {
@@ -635,6 +655,39 @@ function syncRangeToggleUI() {
 }
 
 /* ============================================================
+   Theme (light/dark) — the `dark` class on <html> is applied as
+   early as possible by an inline script in <head> (before any
+   CSS/JS loads) to avoid a flash of the wrong theme; this just
+   keeps the toggle button and localStorage in sync afterward.
+   ============================================================ */
+const THEME_STORAGE_KEY = 'washtrackpro:theme';
+
+function isDarkThemeActive() {
+  return document.documentElement.classList.contains('dark');
+}
+
+function syncThemeToggleUI() {
+  const btn = document.getElementById('themeToggle');
+  if (!btn) return;
+  const dark = isDarkThemeActive();
+  const icon = btn.querySelector('[data-theme-icon]');
+  if (icon) icon.textContent = dark ? 'light_mode' : 'dark_mode';
+  btn.setAttribute('aria-pressed', String(dark));
+  btn.setAttribute('aria-label', dark ? 'Switch to light mode' : 'Switch to dark mode');
+}
+
+function toggleTheme() {
+  const dark = !isDarkThemeActive();
+  document.documentElement.classList.toggle('dark', dark);
+  try {
+    localStorage.setItem(THEME_STORAGE_KEY, dark ? 'dark' : 'light');
+  } catch (e) {
+    console.warn('WashTrack: could not save theme preference.', e);
+  }
+  syncThemeToggleUI();
+}
+
+/* ============================================================
    Customer Detail Panel
    ============================================================ */
 function openCustomerDetail(id) {
@@ -838,11 +891,12 @@ document.querySelectorAll('.card-shadow').forEach(card => {
    Boot: restore state from the URL (if any) and render
    ============================================================ */
 (function boot() {
+  syncThemeToggleUI();
   state = readStateFromURL();
   const search = document.getElementById('globalSearch');
   if (search) search.value = state.q;
   syncRangeToggleUI();
-  navigate(state.view, { keepFilters: true });
+  navigate(state.view, { keepFilters: true, replaceHistory: true });
   syncFilterTabUI();
   updateDashboardFinancials();
 })();

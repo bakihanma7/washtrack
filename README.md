@@ -4,6 +4,41 @@ A single-page admin dashboard for managing a car wash and automotive maintenance
 business — Executive Dashboard, Car Wash Jobs, Maintenance Jobs, and Customer
 Management.
 
+## Status: v2.4 — Polish & Accessibility
+
+Building on v2.3, this update implements the "Polish & Accessibility"
+section of `ROADMAP.txt`:
+
+- **Real client-side routing.** `navigate()` now uses `history.pushState`
+  for genuine navigations (sidebar clicks, "New Job" redirects, keyword
+  search routing), so the browser's Back/Forward buttons move between
+  actual pages. In-page state changes (search, filters, sort, pagination)
+  still use `history.replaceState`, so typing in the search box or
+  flipping a page doesn't spam the history stack. A `popstate` listener
+  re-syncs in-memory state and the DOM (without pushing another entry)
+  whenever the user navigates via Back/Forward.
+- **Page transition animation.** `.page.active` now runs a 220ms fade +
+  slight slide-up (`@keyframes page-in`) instead of an instant
+  `display:none` → `display:block` cut, and is skipped entirely under
+  `prefers-reduced-motion: reduce`.
+- **`outline` contrast bump.** The caption-text color moved from `#6b7a76`
+  (4.28:1 against the app's surface background — under the 4.5:1 AA
+  minimum for normal text) to `#5c6b67` (5.3–5.6:1 against the surfaces it
+  actually appears on), with real comfortable headroom instead of sitting
+  right at the line.
+- **Dark mode.** Every design token in `tailwind.config.js` is now a CSS
+  custom property (`rgb(var(--color-x) / <alpha-value>)`), with light
+  values in `:root` and dark values under `html.dark` — see DESIGN.md's
+  new "Dark Mode" section for the full palette-inversion approach. A
+  sun/moon toggle button in the header flips the `dark` class, persists
+  the choice to `localStorage`, and an inline `<head>` script applies the
+  stored preference (or `prefers-color-scheme`) before any CSS loads, so
+  there's no flash of the wrong theme.
+- **Favicon, meta description, Open Graph/Twitter card tags.** `favicon.svg`
+  plus real `<meta name="description">`, `og:*`, and `twitter:*` tags, so
+  the browser tab and any shared link have real content instead of the
+  browser/platform default.
+
 ## Status: v2.3 — Performance & Architecture
 
 Building on v2.2, this update implements the "Performance & Architecture"

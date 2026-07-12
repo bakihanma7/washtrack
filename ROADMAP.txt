@@ -49,17 +49,17 @@ Performance & Architecture  [DONE — see README "Status: v2.3"]
 15. [x] Add a small Playwright test suite to the repo itself (not just used
     ad hoc) plus a GitHub Actions workflow to run it on every push.
 
-Polish & Accessibility
+Polish & Accessibility  [DONE — see README "Status: v2.4"]
 -------------
-16. Add real client-side routing (hash or History API) so the browser
+16. [x] Add real client-side routing (hash or History API) so the browser
     back/forward buttons work between pages instead of only the sidebar.
-17. Smooth transition/fade animation between page switches instead of
+17. [x] Smooth transition/fade animation between page switches instead of
     an instant hard cut.
-18. Bump the "outline" caption-text color slightly — it sits right at
+18. [x] Bump the "outline" caption-text color slightly — it sits right at
     the WCAG AA contrast minimum for small text.
-19. Add a dark mode toggle — `darkMode: "class"` is already configured
+19. [x] Add a dark mode toggle — `darkMode: "class"` is already configured
     in the Tailwind config but nothing in the UI switches it on.
-20. Add a favicon, meta description, and Open Graph tags — currently
+20. [x] Add a favicon, meta description, and Open Graph tags — currently
     blank/missing, so the browser tab and any shared link look bare.
 
 
