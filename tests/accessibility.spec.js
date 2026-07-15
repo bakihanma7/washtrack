@@ -1,8 +1,9 @@
 const { test, expect } = require('@playwright/test');
+const { clearAndSeedSession } = require('./helpers/seed-session');
 
 test.describe('Keyboard accessibility & focus trapping', () => {
   test.beforeEach(async ({ page }) => {
-    await page.addInitScript(() => localStorage.clear());
+    await page.addInitScript(clearAndSeedSession);
   });
 
   test('Tab cannot escape the New Job modal while it is open', async ({ page }) => {

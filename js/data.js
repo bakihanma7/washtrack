@@ -201,6 +201,11 @@ const SEED_DATA = {
     { id: 'e02', description: 'Technician overtime pay', category: 'Labor', amount: 410.00, date: '2023-12-15' },
     { id: 'e03', description: 'Pressure washer nozzle replacement', category: 'Equipment', amount: 120.00, date: '2023-12-16' },
   ],
+
+  /* Notes are keyed by `${kind}:${id}` (e.g. "customer:c01",
+     "carwash:w01", "maintenance:m01") -> array of note objects,
+     newest first. See js/platform.js for the reader/writer helpers. */
+  notes: {},
 };
 
 /* ---- Persistence ---- */
@@ -213,6 +218,10 @@ function loadData() {
         if (!Array.isArray(parsed.expenses)) {
           // Migrate data saved before the expenses feature existed.
           parsed.expenses = JSON.parse(JSON.stringify(SEED_DATA.expenses));
+        }
+        if (!parsed.notes || typeof parsed.notes !== 'object') {
+          // Migrate data saved before the notes feature existed.
+          parsed.notes = {};
         }
         return parsed;
       }

@@ -1,8 +1,9 @@
 const { test, expect } = require('@playwright/test');
+const { clearAndSeedSession } = require('./helpers/seed-session');
 
 test.describe('Navigation', () => {
   test.beforeEach(async ({ page }) => {
-    await page.addInitScript(() => localStorage.clear());
+    await page.addInitScript(clearAndSeedSession);
     await page.goto('/');
   });
 

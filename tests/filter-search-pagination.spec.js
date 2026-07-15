@@ -1,8 +1,9 @@
 const { test, expect } = require('@playwright/test');
+const { clearAndSeedSession } = require('./helpers/seed-session');
 
 test.describe('Search, filter & pagination', () => {
   test.beforeEach(async ({ page }) => {
-    await page.addInitScript(() => localStorage.clear());
+    await page.addInitScript(clearAndSeedSession);
   });
 
   test('typing in the search box is debounced (state updates after a short delay)', async ({ page }) => {

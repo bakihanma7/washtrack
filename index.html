@@ -20,6 +20,22 @@
 <meta name="description" content="WashTrack Pro is an admin dashboard for car wash and automotive maintenance businesses — manage customers, car wash jobs, maintenance tickets, and inventory in one place."/>
 <link rel="icon" type="image/svg+xml" href="favicon.svg"/>
 <link rel="alternate icon" href="favicon.svg"/>
+<link rel="manifest" href="manifest.json"/>
+<meta name="theme-color" content="#006b5f"/>
+<script>
+  // Applied as early as possible (before any body content paints) so
+  // there's no flash of the logged-in dashboard before we know whether
+  // there's an active session. Mirrors the dark-mode flash-prevention
+  // script above. Full gating logic lives in js/auth.js.
+  (function () {
+    try {
+      var hasSession = !!localStorage.getItem('washtrackpro:session:v1');
+      document.documentElement.setAttribute('data-auth', hasSession ? 'in' : 'out');
+    } catch (e) {
+      document.documentElement.setAttribute('data-auth', 'out');
+    }
+  })();
+</script>
 <meta property="og:title" content="WashTrack Pro"/>
 <meta property="og:description" content="An admin dashboard for car wash and automotive maintenance businesses — customers, jobs, and inventory in one place."/>
 <meta property="og:type" content="website"/>
@@ -30,9 +46,29 @@
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Hanken+Grotesk:wght@400;600;700&display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
 <link rel="stylesheet" href="css/styles.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jsqr/1.4.0/jsQR.js" defer></script>
 </head>
 <body class="bg-background text-on-background font-body-md min-h-screen overflow-x-hidden">
 
+<!-- ═══════════════ AUTH SCREEN (login / signup) ═══════════════ -->
+<div id="authScreen" class="fixed inset-0 z-[100] bg-background items-center justify-center p-4 overflow-y-auto">
+  <div class="w-full max-w-md my-auto py-8">
+    <div class="text-center mb-8">
+      <div class="w-14 h-14 rounded-2xl primary-gradient flex items-center justify-center text-white shadow-lg mx-auto mb-4 overflow-hidden">
+        <span class="material-symbols-outlined text-[26px]" aria-hidden="true">local_car_wash</span>
+      </div>
+      <h1 class="font-headline-md text-headline-md text-on-surface">WashTrack Pro</h1>
+      <p class="text-on-surface-variant text-[12px] mt-1 uppercase tracking-widest font-label-bold">Executive Admin</p>
+    </div>
+    <div class="bg-surface-container-lowest border border-outline-variant rounded-3xl shadow-2xl p-7">
+      <div id="authFormMount"></div>
+    </div>
+    <p class="text-center text-[11px] text-on-surface-variant mt-6 leading-relaxed px-4">Accounts are stored locally in this browser only — this is a demo login for role-based access, not a secure production auth system.</p>
+  </div>
+</div>
+
+<!-- ═══════════════ APP SHELL (hidden until logged in) ═══════════════ -->
+<div id="appShell">
 <!-- ═══════════════ SIDEBAR ═══════════════ -->
 <aside class="h-screen w-20 lg:w-64 fixed left-0 top-0 bg-surface-container-lowest border-r border-outline-variant flex flex-col p-3 lg:p-4 gap-1 z-50 shadow-sm transition-all duration-200">
   <div class="flex items-center justify-center lg:justify-start gap-3 px-0 lg:px-2 mb-6 mt-2">
@@ -70,6 +106,10 @@
       <span class="material-symbols-outlined nav-icon text-[20px]" aria-hidden="true">category</span>
       <span class="text-body-md hidden lg:inline">Service Packages</span>
     </button>
+    <button type="button" class="nav-item flex items-center justify-center lg:justify-start gap-3 px-0 lg:px-4 py-2.5 rounded-xl text-on-surface-variant hover:bg-surface-variant select-none w-full overflow-hidden" data-page="myjobs" title="My Jobs Today">
+      <span class="material-symbols-outlined nav-icon text-[20px]" aria-hidden="true">assignment_turned_in</span>
+      <span class="text-body-md hidden lg:inline">My Jobs Today</span>
+    </button>
   </nav>
 
   <button type="button" data-action="openNewJobModal" class="primary-gradient text-white py-3 rounded-xl font-label-bold flex items-center justify-center gap-2 shadow-lg hover:opacity-90 active:scale-95 transition-all mb-2 overflow-hidden">
@@ -77,11 +117,11 @@
   </button>
 
   <div class="pt-3 border-t border-outline-variant flex flex-col gap-1">
-    <button type="button" data-action="toast" data-arg="Reports module coming soon." class="flex items-center justify-center lg:justify-start gap-3 px-0 lg:px-4 py-2.5 rounded-xl text-on-surface-variant hover:bg-surface-variant select-none w-full overflow-hidden" title="Reports">
+    <button type="button" id="navReports" data-action="toast" data-arg="Reports module coming soon." class="flex items-center justify-center lg:justify-start gap-3 px-0 lg:px-4 py-2.5 rounded-xl text-on-surface-variant hover:bg-surface-variant select-none w-full overflow-hidden" title="Reports">
       <span class="material-symbols-outlined text-[20px]" aria-hidden="true">bar_chart</span>
       <span class="text-body-md hidden lg:inline">Reports</span>
     </button>
-    <button type="button" data-action="toast" data-arg="Settings coming soon." class="flex items-center justify-center lg:justify-start gap-3 px-0 lg:px-4 py-2.5 rounded-xl text-on-surface-variant hover:bg-surface-variant select-none w-full overflow-hidden" title="Settings">
+    <button type="button" data-action="openSettingsModal" class="flex items-center justify-center lg:justify-start gap-3 px-0 lg:px-4 py-2.5 rounded-xl text-on-surface-variant hover:bg-surface-variant select-none w-full overflow-hidden" title="Settings">
       <span class="material-symbols-outlined text-[20px]" aria-hidden="true">settings</span>
       <span class="text-body-md hidden lg:inline">Settings</span>
     </button>
@@ -98,6 +138,13 @@
     </div>
   </div>
   <div class="flex items-center gap-2 lg:gap-5 shrink-0">
+    <span id="offlineBadge" class="hidden items-center gap-1.5 bg-warning-container text-warning px-3 py-1.5 rounded-full text-[11px] font-bold">
+      <span class="material-symbols-outlined text-[14px]" aria-hidden="true">wifi_off</span>
+      <span class="hidden md:inline">Offline</span>
+    </span>
+    <button type="button" data-action="openScanModal" aria-label="Scan to check in" class="hover:text-primary transition-colors w-9 h-9 flex items-center justify-center rounded-full hover:bg-surface-container text-on-surface-variant">
+      <span class="material-symbols-outlined text-[20px]" aria-hidden="true">qr_code_scanner</span>
+    </button>
     <button type="button" data-action="toast" data-arg="Report generated and queued for download." class="primary-gradient text-white px-3 lg:px-5 py-2 rounded-full font-label-bold text-label-bold shadow hover:shadow-md transition-all active:scale-95 text-[12px] flex items-center gap-1.5">
       <span class="material-symbols-outlined text-[16px]" aria-hidden="true">description</span>
       <span class="hidden md:inline">Generate Report</span>
@@ -114,12 +161,12 @@
         <span class="absolute top-1.5 right-1.5 w-2 h-2 bg-error rounded-full border-2 border-surface" aria-hidden="true"></span>
       </button>
       <div class="h-7 w-px bg-outline-variant hidden md:block"></div>
-      <button type="button" data-action="toast" data-arg="Account menu coming soon." class="flex items-center gap-2.5 cursor-pointer group min-w-0">
+      <button type="button" data-action="openSettingsModal" aria-label="Account and settings" class="flex items-center gap-2.5 cursor-pointer group min-w-0">
         <div class="text-right hidden md:block min-w-0">
-          <p class="font-label-bold text-label-bold text-on-surface leading-tight truncate">Alex Rivera</p>
-          <p class="text-[10px] text-on-surface-variant truncate">Admin</p>
+          <p id="headerAccountName" class="font-label-bold text-label-bold text-on-surface leading-tight truncate">Account</p>
+          <p id="headerAccountRole" class="text-[10px] text-on-surface-variant truncate">—</p>
         </div>
-        <div class="w-9 h-9 rounded-full border-2 border-primary-container bg-primary/10 flex items-center justify-center text-primary font-bold text-[12px] shrink-0 overflow-hidden">AR</div>
+        <div id="headerAccountAvatar" class="w-9 h-9 rounded-full border-2 border-primary-container bg-primary/10 flex items-center justify-center text-primary font-bold text-[12px] shrink-0 overflow-hidden">–</div>
       </button>
     </div>
   </div>
@@ -522,6 +569,9 @@
         <p class="text-on-surface-variant font-body-md mt-1">Manage and monitor high-value relationships across your service network.</p>
       </div>
       <div class="flex gap-3">
+        <button type="button" data-action="openScanModal" class="bg-surface-container-lowest border border-outline-variant px-5 py-2.5 rounded-xl font-label-bold text-label-bold text-on-surface flex items-center gap-2 hover:bg-surface-container-low transition-colors shadow-sm text-[12px]">
+          <span class="material-symbols-outlined text-[16px]" aria-hidden="true">qr_code_scanner</span> Scan to Check In
+        </button>
         <button type="button" data-action="toast" data-arg="Exporting customer list as CSV…" class="bg-surface-container-lowest border border-outline-variant px-5 py-2.5 rounded-xl font-label-bold text-label-bold text-on-surface flex items-center gap-2 hover:bg-surface-container-low transition-colors shadow-sm text-[12px]">
           <span class="material-symbols-outlined text-[16px]" aria-hidden="true">file_download</span> Export CSV
         </button>
@@ -634,7 +684,23 @@
     </div>
   </div>
 
+  <!-- ─── PAGE: MY JOBS TODAY (technician companion view) ─── -->
+  <div id="page-myjobs" class="page p-4 lg:p-8">
+    <div class="max-w-xl mx-auto w-full">
+      <div class="mb-6">
+        <nav class="flex items-center gap-1.5 text-[11px] text-on-surface-variant mb-1" aria-label="Breadcrumb">
+          <span>Admin</span><span class="material-symbols-outlined text-[13px]" aria-hidden="true">chevron_right</span>
+          <span class="text-primary font-medium">My Jobs Today</span>
+        </nav>
+        <h2 class="font-display-lg text-display-lg text-on-surface tracking-tight">My Jobs Today</h2>
+        <p id="myJobsSubtitle" class="text-on-surface-variant font-body-md mt-1">Signed in as —</p>
+      </div>
+      <div id="myJobsList" class="flex flex-col gap-3"></div>
+    </div>
+  </div>
+
 </main>
+</div><!-- /#appShell -->
 
 <!-- ═══════════════ CUSTOMER DETAIL PANEL ═══════════════ -->
 <div id="detailPanel" class="detail-panel fixed right-0 top-16 h-[calc(100vh-4rem)] w-[22rem] max-w-[90vw] bg-surface-container-lowest border-l border-outline-variant shadow-2xl z-30 p-7 overflow-y-auto" role="dialog" aria-modal="true" aria-label="Customer details" aria-hidden="true">
@@ -691,7 +757,19 @@
         </div>
       </div>
     </div>
+    <div>
+      <p class="font-label-bold text-[10px] text-on-surface-variant uppercase tracking-widest mb-3">Notes</p>
+      <div id="detailNotesList" class="space-y-2 mb-3 max-h-48 overflow-y-auto"></div>
+      <form id="detailNoteForm" class="space-y-2">
+        <label for="detailNoteInput" class="sr-only">Add a note</label>
+        <textarea id="detailNoteInput" rows="2" placeholder="Add a note for staff…" class="w-full bg-surface-container-low border border-outline-variant rounded-xl px-3.5 py-2.5 text-[12px] text-on-surface focus:ring-2 focus:ring-primary-container focus:border-transparent outline-none transition-all resize-none"></textarea>
+        <button type="submit" class="w-full py-2 rounded-xl border border-outline-variant text-on-surface font-label-bold text-[11px] hover:bg-surface-container-low transition-colors">Add Note</button>
+      </form>
+    </div>
     <div class="pt-4">
+      <button type="button" data-action="viewCurrentCustomerQR" class="w-full bg-surface-container-low text-on-surface font-label-bold text-[12px] py-3 rounded-2xl hover:bg-surface-container transition-all flex items-center justify-center gap-2 mb-2.5">
+        <span class="material-symbols-outlined text-[16px]" aria-hidden="true">qr_code_2</span> View Check-in QR
+      </button>
       <button type="button" data-action="toast" data-arg="Loading full profile…" class="w-full bg-primary-container text-on-primary-container font-label-bold text-[12px] py-3.5 rounded-2xl hover:brightness-95 transition-all shadow-sm">View Full Profile</button>
       <button type="button" data-action="deactivateCurrentCustomer" class="w-full mt-2.5 text-error font-label-bold text-[12px] py-3 rounded-2xl hover:bg-error-container/20 transition-all">Deactivate Account</button>
     </div>
@@ -736,6 +814,15 @@
         <span id="jobPrice" class="text-[12px] font-bold text-on-surface truncate">$85.00</span>
       </div>
     </div>
+    <div class="pt-2">
+      <p class="font-label-bold text-[10px] text-on-surface-variant uppercase tracking-widest mb-3">Notes</p>
+      <div id="jobNotesList" class="space-y-2 mb-3 max-h-40 overflow-y-auto"></div>
+      <form id="jobNoteForm" class="space-y-2">
+        <label for="jobNoteInput" class="sr-only">Add a note</label>
+        <textarea id="jobNoteInput" rows="2" placeholder="Add a note for staff…" class="w-full bg-surface-container-low border border-outline-variant rounded-xl px-3.5 py-2.5 text-[12px] text-on-surface focus:ring-2 focus:ring-primary-container focus:border-transparent outline-none transition-all resize-none"></textarea>
+        <button type="submit" class="w-full py-2 rounded-xl border border-outline-variant text-on-surface font-label-bold text-[11px] hover:bg-surface-container-low transition-colors">Add Note</button>
+      </form>
+    </div>
     <div class="pt-4">
       <button type="button" data-action="markCurrentJobComplete" class="w-full bg-primary-container text-on-primary-container font-label-bold text-[12px] py-3.5 rounded-2xl hover:brightness-95 transition-all shadow-sm">Mark Complete</button>
       <button type="button" data-action="cancelCurrentJob" class="w-full mt-2.5 text-error font-label-bold text-[12px] py-3 rounded-2xl hover:bg-error-container/20 transition-all">Cancel Job</button>
@@ -755,6 +842,8 @@
 <div id="toastContainer" class="fixed bottom-6 right-6 z-[60] flex flex-col gap-2 items-end" aria-live="polite" aria-atomic="true"></div>
 
 <script src="js/data.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/platform.js"></script>
 <script src="js/dropdown.js"></script>
 <script src="js/modals.js"></script>
 <script src="js/script.js"></script>

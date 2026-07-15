@@ -1,8 +1,9 @@
 const { test, expect } = require('@playwright/test');
+const { clearAndSeedSession } = require('./helpers/seed-session');
 
 test.describe('Data rendering', () => {
   test.beforeEach(async ({ page }) => {
-    await page.addInitScript(() => localStorage.clear());
+    await page.addInitScript(clearAndSeedSession);
   });
 
   test('customers table renders rows sourced from DATA, not static markup', async ({ page }) => {

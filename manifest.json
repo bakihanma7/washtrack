@@ -1,0 +1,14 @@
+{
+  "name": "WashTrack Pro",
+  "short_name": "WashTrack",
+  "description": "Admin dashboard for car wash and automotive maintenance businesses.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#f8f9ff",
+  "theme_color": "#006b5f",
+  "icons": [
+    { "src": "favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}

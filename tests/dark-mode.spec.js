@@ -1,12 +1,17 @@
 const { test, expect } = require('@playwright/test');
+const { seedAuthenticatedSession } = require('./helpers/seed-session');
 
 test.describe('Dark mode', () => {
-  // No addInitScript(() => localStorage.clear()) here: it re-runs on
-  // every navigation for the page's lifetime, including page.reload()
-  // (used below), which would wipe out the persisted theme preference
-  // right before the reload's own scripts read it. Each test already
-  // gets a fresh, isolated browser context (and empty localStorage) by
-  // default.
+  // No full-clear addInitScript here: it re-runs on every navigation
+  // for the page's lifetime, including page.reload() (used below),
+  // which would wipe out the persisted theme preference right before
+  // the reload's own scripts read it. Each test already gets a fresh,
+  // isolated browser context (and empty localStorage) by default —
+  // we just need to seed an authenticated session, since the header
+  // (and #themeToggle inside it) is gated behind login.
+  test.beforeEach(async ({ page }) => {
+    await page.addInitScript(seedAuthenticatedSession);
+  });
 
   test('defaults to light mode with no stored preference', async ({ page }) => {
     await page.goto('/');

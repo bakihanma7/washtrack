@@ -1,8 +1,9 @@
 const { test, expect } = require('@playwright/test');
+const { clearAndSeedSession } = require('./helpers/seed-session');
 
 test.describe('Responsive layout', () => {
   test.beforeEach(async ({ page }) => {
-    await page.addInitScript(() => localStorage.clear());
+    await page.addInitScript(clearAndSeedSession);
   });
 
   test('no horizontal overflow on narrow viewports', async ({ page }) => {
@@ -45,7 +46,7 @@ test.describe('Visual smoke checks', () => {
       });
       page.on('pageerror', (err) => consoleErrors.push(err.message));
 
-      await page.addInitScript(() => localStorage.clear());
+      await page.addInitScript(clearAndSeedSession);
       await page.goto(url);
       await expect(page.locator(`#page-${name}`)).toBeVisible();
 

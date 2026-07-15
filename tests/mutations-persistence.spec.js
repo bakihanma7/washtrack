@@ -1,17 +1,21 @@
 const { test, expect } = require('@playwright/test');
+const { seedAuthenticatedSession } = require('./helpers/seed-session');
 
 const STORAGE_KEY = 'washtrackpro:data:v1';
 
 test.describe('Mutations & persistence', () => {
-  // NOTE: unlike the other spec files, this suite doesn't use
-  // page.addInitScript(() => localStorage.clear()) in beforeEach.
-  // addInitScript re-runs on every navigation for the page's
-  // lifetime — including page.reload() — which would wipe out the
-  // very data the "persists across reload" test below just saved,
-  // right before the reloaded page's own scripts run. Each test
-  // already gets a fresh, isolated browser context (and therefore
-  // empty localStorage) by default, so no explicit clear is needed
-  // here at all.
+  // NOTE: unlike the other spec files, this suite doesn't do a full
+  // localStorage.clear() in beforeEach. addInitScript re-runs on every
+  // navigation for the page's lifetime — including page.reload() (used
+  // below) — which would wipe out the very data the "persists across
+  // reload" test just saved, right before the reloaded page's own
+  // scripts run. Each test already gets a fresh, isolated browser
+  // context (and therefore empty localStorage) by default. We do still
+  // need to seed a session on every run, though — seedAuthenticatedSession
+  // only touches its own two keys, so it's safe to re-run on reload.
+  test.beforeEach(async ({ page }) => {
+    await page.addInitScript(seedAuthenticatedSession);
+  });
 
   test('registering a new customer adds a row and persists across reload', async ({ page }) => {
     await page.goto('/?view=customers');

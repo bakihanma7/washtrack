@@ -95,6 +95,11 @@ function showToastElement(message) {
    ============================================================ */
 function navigate(pageId, opts) {
   opts = opts || {};
+  if (typeof currentUser === 'function') {
+    const u = currentUser();
+    const allowed = u && typeof ROLE_PAGES !== 'undefined' ? ROLE_PAGES[u.role] : null;
+    if (allowed && !allowed.includes(pageId)) pageId = allowed[0];
+  }
   state.view = pageId;
   if (!opts.keepFilters) {
     state.status = 'all';
@@ -172,6 +177,9 @@ const ACTIONS = {
   markCurrentJobComplete: () => markCurrentJobComplete(),
   cancelCurrentJob: () => cancelCurrentJob(),
   toggleTheme: () => toggleTheme(),
+  openScanModal: () => openScanModal(),
+  openSettingsModal: () => openSettingsModal(),
+  viewCurrentCustomerQR: () => viewCurrentCustomerQR(),
 };
 
 document.addEventListener('click', (e) => {
@@ -537,6 +545,7 @@ function renderActiveView() {
   if (state.view === 'customers') renderCustomers();
   else if (state.view === 'carwash') renderCarwashJobs();
   else if (state.view === 'maintenance') renderMaintenanceJobs();
+  else if (state.view === 'myjobs' && typeof renderMyJobs === 'function') renderMyJobs();
 }
 
 /* ============================================================
@@ -711,6 +720,7 @@ function openCustomerDetail(id) {
   panel.setAttribute('aria-hidden', 'false');
   document.getElementById('detailCloseBtn').focus();
   detailPanelDetachTrap = attachFocusTrap(panel);
+  if (typeof renderCustomerNotes === 'function') renderCustomerNotes(id);
 }
 
 function closeDetail() {
@@ -782,6 +792,7 @@ function openJobDetail(kind, id) {
   panel.setAttribute('aria-hidden', 'false');
   document.getElementById('jobCloseBtn').focus();
   jobPanelDetachTrap = attachFocusTrap(panel);
+  if (typeof renderJobNotes === 'function') renderJobNotes(kind, id);
 }
 
 function closeJobDetail() {
@@ -888,15 +899,35 @@ document.querySelectorAll('.card-shadow').forEach(card => {
 });
 
 /* ============================================================
-   Boot: restore state from the URL (if any) and render
+   Boot: restore state from the URL (if any) and render.
+   Skipped entirely if there's no active session — js/auth.js
+   renders the login/signup screen instead and calls runAppBoot()
+   itself once the person logs in or signs up.
    ============================================================ */
-(function boot() {
+function runAppBoot(user) {
   syncThemeToggleUI();
   state = readStateFromURL();
+  if (user && typeof ROLE_PAGES !== 'undefined') {
+    const allowed = ROLE_PAGES[user.role] || ROLE_PAGES.manager;
+    if (!allowed.includes(state.view)) state.view = allowed[0];
+  }
   const search = document.getElementById('globalSearch');
   if (search) search.value = state.q;
   syncRangeToggleUI();
   navigate(state.view, { keepFilters: true, replaceHistory: true });
   syncFilterTabUI();
   updateDashboardFinancials();
+}
+
+(function boot() {
+  if (typeof isAuthenticated === 'function' && !isAuthenticated()) {
+    if (typeof renderAuthScreen === 'function') renderAuthScreen();
+    return;
+  }
+  const user = typeof currentUser === 'function' ? currentUser() : null;
+  if (user) {
+    if (typeof applyRoleGating === 'function') applyRoleGating(user.role);
+    if (typeof updateHeaderProfile === 'function') updateHeaderProfile(user);
+  }
+  runAppBoot(user);
 })();
