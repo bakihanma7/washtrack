@@ -7,7 +7,7 @@
    Bump CACHE_NAME whenever shipping a shell change so old
    caches get cleaned up on activate.
    ========================================================== */
-const CACHE_NAME = 'washtrackpro-shell-v2';
+const CACHE_NAME = 'washtrackpro-shell-v3';
 const APP_SHELL = [
   './',
   './index.html',
@@ -20,6 +20,7 @@ const APP_SHELL = [
   './js/dropdown.js',
   './js/modals.js',
   './js/script.js',
+  './js/vendor/jsqr.js',
 ];
 
 self.addEventListener('install', (event) => {
