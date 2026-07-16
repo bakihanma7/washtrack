@@ -4,6 +4,49 @@ A single-page admin dashboard for managing a car wash and automotive maintenance
 business — Executive Dashboard, Car Wash Jobs, Maintenance Jobs, and Customer
 Management.
 
+## Status: v2.5 — Platform & Access
+
+Building on v2.4, this update implements the "Platform & Access" section of
+`ROADMAP.txt` (items #29–#35):
+
+- **Auth (login/sign-up) + roles.** `js/auth.js` adds client-side sign-up and
+  login screens — accounts (name, email, SHA-256 hashed password, role) live
+  in `localStorage`; a session is just an account id in `localStorage`. This
+  is demo-grade auth for role-based UI gating, not a production security
+  system — there's no backend to keep secrets on. The whole app is gated
+  behind `#authScreen`/`#appShell`, driven by an `html[data-auth]` attribute
+  set as early as possible (mirroring the existing dark-mode
+  flash-prevention pattern) so there's no flash of the dashboard before a
+  session is confirmed.
+- **Role-based access.** Admin / Manager / Technician roles. `ROLE_PAGES` in
+  `js/auth.js` gates which sidebar items and pages each role can reach;
+  Technicians land on a stripped "My Jobs Today" view instead of the full
+  dashboard, and can't reach Customers/Inventory/Packages/Reports.
+- **Threaded notes.** Customers and jobs each have a notes panel
+  (`js/platform.js`), authored by whoever's logged in, stored per-record in
+  `DATA.notes`.
+- **QR/barcode check-in.** A camera-based "Scan to Check In" flow using a
+  locally vendored copy of `jsQR` (`js/vendor/jsqr.js` — not loaded from a
+  CDN, since WebKit rejected cdnjs's copy in CI). Each customer's profile
+  can generate a check-in QR (via the qrserver.com image API) to scan
+  against.
+- **Google Calendar sync — stub.** A connect/disconnect toggle in the new
+  Settings modal that simulates the connected state in `localStorage`.
+  Genuine two-way sync needs a backend to hold OAuth tokens, which this
+  static, GitHub Pages-hosted app doesn't have — the modal says so
+  explicitly rather than pretending to sync.
+- **Offline PWA.** `manifest.json` + `sw.js` cache the app shell for offline
+  use; a small pending-changes queue tracks saves made while offline and
+  flushes (with a toast) once the `online` event fires. The Settings modal
+  shows live online/offline status and a manual "Sync Now."
+- **"My Jobs Today."** A mobile-friendly technician companion view
+  (`#page-myjobs`) filtering Car Wash + Maintenance jobs by the logged-in
+  technician's exact name.
+
+The Playwright suite now seeds an authenticated admin session in every spec
+via `tests/helpers/seed-session.js` (`seedAuthenticatedSession` /
+`clearAndSeedSession`), since every page requires a session.
+
 ## Status: v2.4 — Polish & Accessibility
 
 Building on v2.3, this update implements the "Polish & Accessibility"

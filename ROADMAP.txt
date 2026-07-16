@@ -124,16 +124,26 @@ Reporting & Intelligence
     based on booking trends, instead of a static "5 left" warning).
 28. Demand forecasting — suggest staffing levels for upcoming busy days.
 
-Platform & Access
+Platform & Access [DONE - v2.5]
 -------------
-29. User authentication / login screen — there's currently no auth at
-    all, anyone who opens the file is "Alex Rivera, Admin."
-30. Role-based permissions (Admin / Manager / Technician views, each
-    seeing only what they need).
-31. In-app messaging/notes between staff on a job or customer record.
-32. Barcode/QR code scanning for fast vehicle check-in.
-33. Google Calendar (or similar) two-way sync for appointments.
-34. Offline mode with background sync (PWA + service worker), useful
-    for a front-desk tablet with patchy WiFi.
-35. A companion mobile view for technicians — a stripped-down "my jobs
-    today" list optimized for a phone screen.
+29. [x] User authentication / login screen — client-side sign-up/login
+    (SHA-256 hashed passwords, localStorage session). Demo-grade auth
+    for role gating, not a production security system (no backend to
+    keep secrets on).
+30. [x] Role-based permissions (Admin / Manager / Technician), gating
+    sidebar nav and page access via ROLE_PAGES in js/auth.js.
+31. [x] In-app notes on a job or customer record, authored by the
+    logged-in user (js/platform.js, DATA.notes).
+32. [x] Barcode/QR code scanning for fast vehicle check-in (camera +
+    vendored jsQR, js/vendor/jsqr.js), with a generated per-customer
+    check-in QR to scan against.
+33. [x] Google Calendar sync — UI-only connect/disconnect stub in
+    Settings. Genuine two-way sync needs a backend to hold OAuth
+    tokens, which this static GitHub Pages app doesn't have; the
+    Settings modal says so explicitly.
+34. [x] Offline mode (PWA + service worker, manifest.json + sw.js)
+    caching the app shell, plus a pending-changes queue that flushes
+    once back online.
+35. [x] "My Jobs Today" companion view for technicians — a stripped
+    mobile-friendly list of Car Wash/Maintenance jobs assigned to the
+    logged-in technician's name.
