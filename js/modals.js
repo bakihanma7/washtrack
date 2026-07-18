@@ -150,6 +150,18 @@ function validatePositiveNumber(inputEl, label) {
   return true;
 }
 
+/* Like validatePositiveNumber, but allows 0 — for fields like stock
+   quantity where hitting zero is a legitimate, common state. */
+function validateNonNegativeNumber(inputEl, label) {
+  const val = parseFloat(inputEl.value);
+  if (isNaN(val) || val < 0) {
+    fieldError(inputEl, (label || 'This value') + ' must be a number of 0 or more.');
+    return false;
+  }
+  clearFieldError(inputEl);
+  return true;
+}
+
 /* ============================================================
    Shared field markup helper
    ============================================================ */
@@ -173,6 +185,13 @@ function dropdownFieldHtml({ id, label, required }) {
 
 /* ============================================================
    New Job modal (Car Wash / Maintenance toggle)
+   Integrates with Core Operations: the Service Type / Package
+   dropdown is driven by DATA.packages (so a package selection sets
+   price automatically), Technician is drawn from the DATA.staff
+   roster instead of free text, and a customer can optionally be
+   linked (customerId) so it shows up in that customer's Service
+   History. Everything stays optional/free-text-friendly since not
+   every job has a matching package, staff member, or customer yet.
    ============================================================ */
 function openNewJobModal(defaultType) {
   const html = `
@@ -187,6 +206,7 @@ function openNewJobModal(defaultType) {
       <button type="button" id="jobTypeMaintenance" class="job-type-btn flex-1 px-4 py-2 rounded-lg font-label-bold text-[12px] transition-colors">Maintenance</button>
     </div>
     <form id="newJobForm" novalidate>
+      ${dropdownFieldHtml({ id: 'njCustomerLink', label: 'Link to Customer (optional)' })}
       <div id="newJobFields"></div>
       <div class="pt-2 flex gap-3">
         <button type="button" data-action="closeModal" class="flex-1 py-3 rounded-2xl border border-outline-variant text-on-surface-variant font-label-bold text-[12px] hover:bg-surface-container-low transition-colors">Cancel</button>
@@ -199,6 +219,34 @@ function openNewJobModal(defaultType) {
   let currentType = defaultType || 'carwash';
   let statusDropdown = null;
   let serviceDropdown = null;
+  let technicianDropdown = null;
+
+  const activeStaffOptions = () => {
+    const opts = [{ value: '', label: 'Unassigned' }];
+    DATA.staff.filter(s => s.status === 'active').forEach(s => opts.push({ value: s.name, label: s.name + ' — ' + s.role }));
+    return opts;
+  };
+
+  const customerLinkDropdown = createDropdown({
+    options: [{ value: '', label: '— No linked customer —' }, ...DATA.customers.map(c => ({ value: c.id, label: c.name }))],
+    value: '', ariaLabel: 'Link to customer',
+    buttonClass: 'w-full flex items-center justify-between gap-2 bg-surface-container-low border border-outline-variant rounded-xl px-3.5 py-2.5 text-[13px] focus:ring-2 focus:ring-primary-container outline-none',
+    listboxClass: 'hidden absolute z-20 mt-1 w-full bg-surface-container-lowest border border-outline-variant rounded-xl shadow-lg py-1 max-h-52 overflow-y-auto',
+    onChange: (customerId) => {
+      const customer = customerId ? findCustomer(customerId) : null;
+      if (!customer) return;
+      if (currentType === 'carwash') {
+        const nameEl = document.getElementById('njCustomerName');
+        const vehicleEl = document.getElementById('njVehicle');
+        if (nameEl && !nameEl.value.trim()) nameEl.value = customer.name;
+        if (vehicleEl && !vehicleEl.value.trim()) vehicleEl.value = customer.vehicle + ' • ' + customer.vehicleColor;
+      } else {
+        const vehicleEl = document.getElementById('njVehicle');
+        if (vehicleEl && !vehicleEl.value.trim()) vehicleEl.value = customer.vehicle + ' • ' + customer.vehicleColor;
+      }
+    },
+  });
+  document.getElementById('njCustomerLink-mount').appendChild(customerLinkDropdown.root);
 
   function renderFields() {
     const fieldsEl = document.getElementById('newJobFields');
@@ -211,23 +259,37 @@ function openNewJobModal(defaultType) {
       fieldsEl.innerHTML =
         textFieldHtml({ id: 'njCustomerName', label: 'Customer Name', placeholder: 'e.g. Marcus Holloway', required: true, autofocus: true }) +
         textFieldHtml({ id: 'njVehicle', label: 'Vehicle', placeholder: 'e.g. Tesla Model 3 • Midnight Silver', required: true }) +
-        dropdownFieldHtml({ id: 'njService', label: 'Service Type', required: true }) +
-        textFieldHtml({ id: 'njTechnician', label: 'Technician', placeholder: 'Leave blank for Unassigned' }) +
+        dropdownFieldHtml({ id: 'njService', label: 'Service / Package', required: true }) +
+        dropdownFieldHtml({ id: 'njTechnician', label: 'Technician' }) +
         textFieldHtml({ id: 'njPrice', label: 'Price ($)', placeholder: 'e.g. 45.00', type: 'number', required: true }) +
         dropdownFieldHtml({ id: 'njStatus', label: 'Status', required: true }) +
-        textFieldHtml({ id: 'njStart', label: 'Start Time', placeholder: 'e.g. 09:45 AM' });
+        textFieldHtml({ id: 'njStart', label: 'Start Time', placeholder: 'e.g. 09:45 AM' }) +
+        textFieldHtml({ id: 'njDate', label: 'Date', type: 'date' });
 
+      const washPackages = DATA.packages.filter(p => p.category === 'wash' && p.active);
+      const serviceOptions = washPackages.length
+        ? washPackages.map(p => ({ value: p.name, label: p.name + ' — $' + p.price.toFixed(2) }))
+        : [{ value: 'Basic Wash', label: 'Basic Wash' }, { value: 'Deluxe Wash', label: 'Deluxe Wash' }, { value: 'Premium Detail', label: 'Premium Detail' }];
       serviceDropdown = createDropdown({
-        options: [
-          { value: 'Basic Wash', label: 'Basic Wash' },
-          { value: 'Deluxe Wash', label: 'Deluxe Wash' },
-          { value: 'Premium Detail', label: 'Premium Detail' },
-        ],
-        value: 'Basic Wash', ariaLabel: 'Service type',
+        options: serviceOptions,
+        value: serviceOptions[0].value, ariaLabel: 'Service / package',
+        buttonClass: 'w-full flex items-center justify-between gap-2 bg-surface-container-low border border-outline-variant rounded-xl px-3.5 py-2.5 text-[13px] focus:ring-2 focus:ring-primary-container outline-none',
+        listboxClass: 'hidden absolute z-20 mt-1 w-full bg-surface-container-lowest border border-outline-variant rounded-xl shadow-lg py-1 max-h-52 overflow-y-auto',
+        onChange: (serviceName) => {
+          const pkg = washPackages.find(p => p.name === serviceName);
+          if (pkg) { const priceEl = document.getElementById('njPrice'); if (priceEl) priceEl.value = pkg.price.toFixed(2); }
+        },
+      });
+      document.getElementById('njService-mount').appendChild(serviceDropdown.root);
+      const firstPkg = washPackages.find(p => p.name === serviceOptions[0].value);
+      if (firstPkg) document.getElementById('njPrice').value = firstPkg.price.toFixed(2);
+
+      technicianDropdown = createDropdown({
+        options: activeStaffOptions(), value: '', ariaLabel: 'Technician',
         buttonClass: 'w-full flex items-center justify-between gap-2 bg-surface-container-low border border-outline-variant rounded-xl px-3.5 py-2.5 text-[13px] focus:ring-2 focus:ring-primary-container outline-none',
         listboxClass: 'hidden absolute z-20 mt-1 w-full bg-surface-container-lowest border border-outline-variant rounded-xl shadow-lg py-1 max-h-52 overflow-y-auto',
       });
-      document.getElementById('njService-mount').appendChild(serviceDropdown.root);
+      document.getElementById('njTechnician-mount').appendChild(technicianDropdown.root);
 
       statusDropdown = createDropdown({
         options: [
@@ -242,12 +304,31 @@ function openNewJobModal(defaultType) {
       document.getElementById('njStatus-mount').appendChild(statusDropdown.root);
     } else {
       fieldsEl.innerHTML =
+        dropdownFieldHtml({ id: 'njPackage', label: 'Package (optional)' }) +
         textFieldHtml({ id: 'njTitle', label: 'Job Title', placeholder: 'e.g. Full Synthetic Oil Change', required: true, autofocus: true }) +
         textFieldHtml({ id: 'njVehicle', label: 'Vehicle', placeholder: 'e.g. Audi RS6 • Nardo Gray • AUD-552', required: true }) +
-        textFieldHtml({ id: 'njTechnician', label: 'Technician', placeholder: 'e.g. Marcus Thorne', required: true }) +
+        dropdownFieldHtml({ id: 'njTechnician', label: 'Technician' }) +
         dropdownFieldHtml({ id: 'njStatus', label: 'Status', required: true }) +
         textFieldHtml({ id: 'njStart', label: 'Start Time', placeholder: 'e.g. 09:15 AM' }) +
+        textFieldHtml({ id: 'njDate', label: 'Date', type: 'date' }) +
         textFieldHtml({ id: 'njNote', label: 'Note / ETA', placeholder: 'e.g. ETA: 30 MINS' });
+
+      const maintPackages = DATA.packages.filter(p => p.category === 'maintenance' && p.active);
+      const packageDropdown = createDropdown({
+        options: [{ value: '', label: '— Custom (set title below) —' }, ...maintPackages.map(p => ({ value: p.name, label: p.name + ' — $' + p.price.toFixed(2) }))],
+        value: '', ariaLabel: 'Package',
+        buttonClass: 'w-full flex items-center justify-between gap-2 bg-surface-container-low border border-outline-variant rounded-xl px-3.5 py-2.5 text-[13px] focus:ring-2 focus:ring-primary-container outline-none',
+        listboxClass: 'hidden absolute z-20 mt-1 w-full bg-surface-container-lowest border border-outline-variant rounded-xl shadow-lg py-1 max-h-52 overflow-y-auto',
+        onChange: (name) => { if (name) document.getElementById('njTitle').value = name; },
+      });
+      document.getElementById('njPackage-mount').appendChild(packageDropdown.root);
+
+      technicianDropdown = createDropdown({
+        options: activeStaffOptions().filter(o => o.value !== '' || true), value: '', ariaLabel: 'Technician',
+        buttonClass: 'w-full flex items-center justify-between gap-2 bg-surface-container-low border border-outline-variant rounded-xl px-3.5 py-2.5 text-[13px] focus:ring-2 focus:ring-primary-container outline-none',
+        listboxClass: 'hidden absolute z-20 mt-1 w-full bg-surface-container-lowest border border-outline-variant rounded-xl shadow-lg py-1 max-h-52 overflow-y-auto',
+      });
+      document.getElementById('njTechnician-mount').appendChild(technicianDropdown.root);
 
       statusDropdown = createDropdown({
         options: [
@@ -262,6 +343,8 @@ function openNewJobModal(defaultType) {
       });
       document.getElementById('njStatus-mount').appendChild(statusDropdown.root);
     }
+    const dateEl = document.getElementById('njDate');
+    if (dateEl) dateEl.value = todayISO();
   }
 
   renderFields();
@@ -270,6 +353,7 @@ function openNewJobModal(defaultType) {
 
   document.getElementById('newJobForm').addEventListener('submit', (e) => {
     e.preventDefault();
+    const customerId = customerLinkDropdown.getValue() || null;
     if (currentType === 'carwash') {
       const nameEl = document.getElementById('njCustomerName');
       const vehicleEl = document.getElementById('njVehicle');
@@ -281,12 +365,14 @@ function openNewJobModal(defaultType) {
 
       const job = createCarwashJob({
         customer: nameEl.value.trim(),
+        customerId,
         vehicle: vehicleEl.value.trim(),
         service: serviceDropdown.getValue(),
-        technician: document.getElementById('njTechnician').value.trim(),
+        technician: technicianDropdown.getValue(),
         price: priceEl.value,
         status: statusDropdown.getValue(),
         start: document.getElementById('njStart').value.trim() || '--:--',
+        date: document.getElementById('njDate').value || todayISO(),
       });
       closeModal();
       toast('New car wash job created for ' + job.customer + '.');
@@ -294,18 +380,18 @@ function openNewJobModal(defaultType) {
     } else {
       const titleEl = document.getElementById('njTitle');
       const vehicleEl = document.getElementById('njVehicle');
-      const techEl = document.getElementById('njTechnician');
       const okTitle = validateRequired(titleEl, 'Job title');
       const okVehicle = validateRequired(vehicleEl, 'Vehicle');
-      const okTech = validateRequired(techEl, 'Technician');
-      if (!okTitle || !okVehicle || !okTech) return;
+      if (!okTitle || !okVehicle) return;
 
       const job = createMaintenanceJob({
         title: titleEl.value.trim(),
+        customerId,
         vehicle: vehicleEl.value.trim(),
-        technician: techEl.value.trim(),
+        technician: technicianDropdown.getValue() || 'Unassigned',
         status: statusDropdown.getValue(),
         start: document.getElementById('njStart').value.trim() || '--:--',
+        date: document.getElementById('njDate').value || todayISO(),
         note: document.getElementById('njNote').value.trim(),
       });
       closeModal();

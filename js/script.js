@@ -151,7 +151,6 @@ window.addEventListener('popstate', () => {
   syncFilterTabUI();
   updateDashboardFinancials();
 });
-
 /* ============================================================
    Delegated action dispatcher — replaces inline onclick="..."
    attributes throughout index.html and the modal templates in
@@ -180,6 +179,14 @@ const ACTIONS = {
   openScanModal: () => openScanModal(),
   openSettingsModal: () => openSettingsModal(),
   viewCurrentCustomerQR: () => viewCurrentCustomerQR(),
+  openNewInventoryModal: () => openNewInventoryModal(),
+  openNewPackageModal: () => openNewPackageModal(),
+  openNewStaffModal: () => openNewStaffModal(),
+  openNewEquipmentModal: () => openNewEquipmentModal(),
+  setCalendarView: (arg) => setCalendarView(arg),
+  calendarStep: (arg) => calendarStep(Number(arg)),
+  calendarToday: () => calendarToday(),
+  setStaffTab: (arg) => setStaffTab(arg),
 };
 
 document.addEventListener('click', (e) => {
@@ -546,6 +553,12 @@ function renderActiveView() {
   else if (state.view === 'carwash') renderCarwashJobs();
   else if (state.view === 'maintenance') renderMaintenanceJobs();
   else if (state.view === 'myjobs' && typeof renderMyJobs === 'function') renderMyJobs();
+  else if (state.view === 'inventory' && typeof renderInventory === 'function') renderInventory();
+  else if (state.view === 'packages' && typeof renderPackages === 'function') renderPackages();
+  else if (state.view === 'calendar' && typeof renderCalendar === 'function') renderCalendar();
+  else if (state.view === 'jobboard' && typeof renderJobBoard === 'function') renderJobBoard();
+  else if (state.view === 'staff' && typeof renderStaffPage === 'function') renderStaffPage();
+  else if (state.view === 'equipment' && typeof renderEquipment === 'function') renderEquipment();
 }
 
 /* ============================================================
@@ -721,6 +734,7 @@ function openCustomerDetail(id) {
   document.getElementById('detailCloseBtn').focus();
   detailPanelDetachTrap = attachFocusTrap(panel);
   if (typeof renderCustomerNotes === 'function') renderCustomerNotes(id);
+  if (typeof renderCustomerServiceHistory === 'function') renderCustomerServiceHistory(id);
 }
 
 function closeDetail() {
@@ -917,6 +931,7 @@ function runAppBoot(user) {
   navigate(state.view, { keepFilters: true, replaceHistory: true });
   syncFilterTabUI();
   updateDashboardFinancials();
+  if (typeof renderCriticalStock === 'function') renderCriticalStock();
 }
 
 (function boot() {

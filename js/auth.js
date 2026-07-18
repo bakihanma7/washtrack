@@ -17,8 +17,8 @@ const ROLE_LABELS = { admin: 'Admin', manager: 'Manager', technician: 'Technicia
    exists for technicians — a stripped, mobile-friendly "my jobs
    today" list. Admins and managers use the full set of views. */
 const ROLE_PAGES = {
-  admin: ['dashboard', 'carwash', 'maintenance', 'customers', 'inventory', 'packages'],
-  manager: ['dashboard', 'carwash', 'maintenance', 'customers', 'inventory', 'packages'],
+  admin: ['dashboard', 'calendar', 'carwash', 'maintenance', 'jobboard', 'customers', 'inventory', 'packages', 'staff', 'equipment'],
+  manager: ['dashboard', 'calendar', 'carwash', 'maintenance', 'jobboard', 'customers', 'inventory', 'packages', 'staff', 'equipment'],
   technician: ['myjobs', 'carwash', 'maintenance'],
 };
 

@@ -7,7 +7,7 @@
    Bump CACHE_NAME whenever shipping a shell change so old
    caches get cleaned up on activate.
    ========================================================== */
-const CACHE_NAME = 'washtrackpro-shell-v3';
+const CACHE_NAME = 'washtrackpro-shell-v4';
 const APP_SHELL = [
   './',
   './index.html',
@@ -17,6 +17,7 @@ const APP_SHELL = [
   './js/data.js',
   './js/auth.js',
   './js/platform.js',
+  './js/operations.js',
   './js/dropdown.js',
   './js/modals.js',
   './js/script.js',

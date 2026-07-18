@@ -86,6 +86,10 @@
       <span class="material-symbols-outlined nav-icon text-[20px]" aria-hidden="true">dashboard</span>
       <span class="text-body-md font-medium hidden lg:inline">Dashboard</span>
     </button>
+    <button type="button" class="nav-item flex items-center justify-center lg:justify-start gap-3 px-0 lg:px-4 py-2.5 rounded-xl text-on-surface-variant hover:bg-surface-variant select-none w-full overflow-hidden" data-page="calendar" title="Calendar">
+      <span class="material-symbols-outlined nav-icon text-[20px]" aria-hidden="true">calendar_month</span>
+      <span class="text-body-md hidden lg:inline">Calendar</span>
+    </button>
     <button type="button" class="nav-item flex items-center justify-center lg:justify-start gap-3 px-0 lg:px-4 py-2.5 rounded-xl text-on-surface-variant hover:bg-surface-variant select-none w-full overflow-hidden" data-page="carwash" title="Car Wash Jobs">
       <span class="material-symbols-outlined nav-icon text-[20px]" aria-hidden="true">local_car_wash</span>
       <span class="text-body-md hidden lg:inline">Car Wash Jobs</span>
@@ -93,6 +97,10 @@
     <button type="button" class="nav-item flex items-center justify-center lg:justify-start gap-3 px-0 lg:px-4 py-2.5 rounded-xl text-on-surface-variant hover:bg-surface-variant select-none w-full overflow-hidden" data-page="maintenance" title="Maintenance Jobs">
       <span class="material-symbols-outlined nav-icon text-[20px]" aria-hidden="true">build</span>
       <span class="text-body-md hidden lg:inline">Maintenance Jobs</span>
+    </button>
+    <button type="button" class="nav-item flex items-center justify-center lg:justify-start gap-3 px-0 lg:px-4 py-2.5 rounded-xl text-on-surface-variant hover:bg-surface-variant select-none w-full overflow-hidden" data-page="jobboard" title="Job Board">
+      <span class="material-symbols-outlined nav-icon text-[20px]" aria-hidden="true">view_kanban</span>
+      <span class="text-body-md hidden lg:inline">Job Board</span>
     </button>
     <button type="button" class="nav-item flex items-center justify-center lg:justify-start gap-3 px-0 lg:px-4 py-2.5 rounded-xl text-on-surface-variant hover:bg-surface-variant select-none w-full overflow-hidden" data-page="customers" title="Customers">
       <span class="material-symbols-outlined nav-icon text-[20px]" aria-hidden="true">group</span>
@@ -105,6 +113,14 @@
     <button type="button" class="nav-item flex items-center justify-center lg:justify-start gap-3 px-0 lg:px-4 py-2.5 rounded-xl text-on-surface-variant hover:bg-surface-variant select-none w-full overflow-hidden" data-page="packages" title="Service Packages">
       <span class="material-symbols-outlined nav-icon text-[20px]" aria-hidden="true">category</span>
       <span class="text-body-md hidden lg:inline">Service Packages</span>
+    </button>
+    <button type="button" class="nav-item flex items-center justify-center lg:justify-start gap-3 px-0 lg:px-4 py-2.5 rounded-xl text-on-surface-variant hover:bg-surface-variant select-none w-full overflow-hidden" data-page="staff" title="Staff">
+      <span class="material-symbols-outlined nav-icon text-[20px]" aria-hidden="true">badge</span>
+      <span class="text-body-md hidden lg:inline">Staff</span>
+    </button>
+    <button type="button" class="nav-item flex items-center justify-center lg:justify-start gap-3 px-0 lg:px-4 py-2.5 rounded-xl text-on-surface-variant hover:bg-surface-variant select-none w-full overflow-hidden" data-page="equipment" title="Equipment">
+      <span class="material-symbols-outlined nav-icon text-[20px]" aria-hidden="true">handyman</span>
+      <span class="text-body-md hidden lg:inline">Equipment</span>
     </button>
     <button type="button" class="nav-item flex items-center justify-center lg:justify-start gap-3 px-0 lg:px-4 py-2.5 rounded-xl text-on-surface-variant hover:bg-surface-variant select-none w-full overflow-hidden" data-page="myjobs" title="My Jobs Today">
       <span class="material-symbols-outlined nav-icon text-[20px]" aria-hidden="true">assignment_turned_in</span>
@@ -313,21 +329,8 @@
           <span class="material-symbols-outlined text-error fill-icon" aria-hidden="true">warning</span>
           <h3 class="font-headline-sm text-[18px] text-on-surface">Critical Stock</h3>
         </div>
-        <div class="space-y-3">
-          <div class="flex justify-between items-center p-3 bg-error-container/20 rounded-xl">
-            <div class="flex items-center gap-2"><div class="w-2 h-2 rounded-full bg-error" aria-hidden="true"></div><span class="font-label-bold text-[12px]">Car Shampoo Pro</span></div>
-            <span class="text-error font-bold text-[12px]">5 Left</span>
-          </div>
-          <div class="flex justify-between items-center p-3 bg-surface-container-low rounded-xl">
-            <div class="flex items-center gap-2"><div class="w-2 h-2 rounded-full bg-warning" aria-hidden="true"></div><span class="font-label-bold text-[12px]">Microfiber Towels</span></div>
-            <span class="text-on-surface-variant font-bold text-[12px]">8 Left</span>
-          </div>
-          <div class="flex justify-between items-center p-3 bg-error-container/20 rounded-xl">
-            <div class="flex items-center gap-2"><div class="w-2 h-2 rounded-full bg-error" aria-hidden="true"></div><span class="font-label-bold text-[12px]">Synthetic Oil 5W-30</span></div>
-            <span class="text-error font-bold text-[12px]">3 Left</span>
-          </div>
-        </div>
-        <button type="button" data-action="toast" data-arg="Restock request sent to your supplier." class="w-full mt-5 py-2 border border-outline-variant text-outline font-label-bold rounded-xl hover:bg-surface-container-high transition-colors text-[12px]">Restock Inventory</button>
+        <div id="criticalStockList" class="space-y-3"></div>
+        <button type="button" data-action="navigate" data-arg="inventory" class="w-full mt-5 py-2 border border-outline-variant text-outline font-label-bold rounded-xl hover:bg-surface-container-high transition-colors text-[12px]">Go to Inventory</button>
       </div>
       <div class="lg:col-span-8">
         <h3 class="font-headline-sm text-[18px] text-on-surface mb-5">Quick Actions</h3>
@@ -652,36 +655,192 @@
 
   <!-- ─── PAGE: INVENTORY (placeholder) ─── -->
   <div id="page-inventory" class="page p-4 lg:p-8">
-    <div class="mb-8">
-      <nav class="flex items-center gap-1.5 text-[11px] text-on-surface-variant mb-1" aria-label="Breadcrumb">
-        <span>Admin</span><span class="material-symbols-outlined text-[13px]" aria-hidden="true">chevron_right</span>
-        <span class="text-primary font-medium">Inventory</span>
-      </nav>
-      <h2 class="font-display-lg text-display-lg text-on-surface tracking-tight">Inventory</h2>
-      <p class="text-on-surface-variant font-body-md mt-1">Track stock levels, manage suppliers, and set reorder alerts.</p>
+    <div class="flex items-end justify-between gap-4 mb-6 flex-wrap">
+      <div>
+        <nav class="flex items-center gap-1.5 text-[11px] text-on-surface-variant mb-1" aria-label="Breadcrumb">
+          <span>Admin</span><span class="material-symbols-outlined text-[13px]" aria-hidden="true">chevron_right</span>
+          <span class="text-primary font-medium">Inventory</span>
+        </nav>
+        <h2 class="font-display-lg text-display-lg text-on-surface tracking-tight">Inventory</h2>
+        <p class="text-on-surface-variant font-body-md mt-1">Track stock levels, manage suppliers, and set reorder alerts.</p>
+      </div>
+      <button type="button" data-action="openNewInventoryModal" class="primary-gradient text-white px-5 py-2.5 rounded-xl font-label-bold text-[12px] flex items-center gap-2 shadow hover:shadow-md transition-all active:scale-95">
+        <span class="material-symbols-outlined text-[16px]" aria-hidden="true">add</span> Add Item
+      </button>
     </div>
-    <div class="flex flex-col items-center justify-center h-80 bg-surface-container-lowest border border-outline-variant rounded-3xl card-shadow text-center p-6">
-      <div class="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center text-primary mb-4 overflow-hidden"><span class="material-symbols-outlined text-[32px]" aria-hidden="true">inventory_2</span></div>
-      <h3 class="font-headline-sm text-headline-sm text-on-surface mb-2">Inventory Module</h3>
-      <p class="text-on-surface-variant text-[13px] max-w-sm">Full inventory management coming in the next release. Track supplies, set low-stock alerts, and manage vendor orders.</p>
+    <div class="bg-surface-container-lowest rounded-3xl border border-outline-variant overflow-hidden shadow-[0px_20px_40px_rgba(0,0,0,0.04)]">
+      <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse">
+          <thead>
+            <tr class="bg-surface-container-low border-b border-outline-variant">
+              <th class="px-6 py-4 font-label-bold text-outline text-[11px] uppercase tracking-widest">Item</th>
+              <th class="px-6 py-4 font-label-bold text-outline text-[11px] uppercase tracking-widest">Supplier</th>
+              <th class="px-6 py-4 font-label-bold text-outline text-[11px] uppercase tracking-widest">Stock</th>
+              <th class="px-6 py-4 font-label-bold text-outline text-[11px] uppercase tracking-widest">Unit Cost</th>
+              <th class="px-6 py-4 font-label-bold text-outline text-[11px] uppercase tracking-widest">Last Restocked</th>
+              <th class="px-6 py-4 font-label-bold text-outline text-[11px] uppercase tracking-widest text-right">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="inventoryTableBody" class="divide-y divide-outline-variant/30"></tbody>
+        </table>
+      </div>
     </div>
   </div>
 
-  <!-- ─── PAGE: SERVICE PACKAGES (placeholder) ─── -->
+  <!-- ─── PAGE: SERVICE PACKAGES ─── -->
   <div id="page-packages" class="page p-4 lg:p-8">
-    <div class="mb-8">
+    <div class="flex items-end justify-between gap-4 mb-6 flex-wrap">
+      <div>
+        <nav class="flex items-center gap-1.5 text-[11px] text-on-surface-variant mb-1" aria-label="Breadcrumb">
+          <span>Admin</span><span class="material-symbols-outlined text-[13px]" aria-hidden="true">chevron_right</span>
+          <span class="text-primary font-medium">Service Packages</span>
+        </nav>
+        <h2 class="font-display-lg text-display-lg text-on-surface tracking-tight">Service Packages</h2>
+        <p class="text-on-surface-variant font-body-md mt-1">Configure and manage your wash and maintenance service tiers.</p>
+      </div>
+      <button type="button" data-action="openNewPackageModal" class="primary-gradient text-white px-5 py-2.5 rounded-xl font-label-bold text-[12px] flex items-center gap-2 shadow hover:shadow-md transition-all active:scale-95">
+        <span class="material-symbols-outlined text-[16px]" aria-hidden="true">add</span> Add Package
+      </button>
+    </div>
+    <div id="packagesGrid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5"></div>
+  </div>
+
+  <!-- ─── PAGE: CALENDAR (week & month booking view) ─── -->
+  <div id="page-calendar" class="page p-4 lg:p-8">
+    <div class="flex items-end justify-between gap-4 mb-6 flex-wrap">
+      <div>
+        <nav class="flex items-center gap-1.5 text-[11px] text-on-surface-variant mb-1" aria-label="Breadcrumb">
+          <span>Admin</span><span class="material-symbols-outlined text-[13px]" aria-hidden="true">chevron_right</span>
+          <span class="text-primary font-medium">Calendar</span>
+        </nav>
+        <h2 class="font-display-lg text-display-lg text-on-surface tracking-tight">Calendar</h2>
+        <p class="text-on-surface-variant font-body-md mt-1">All car wash and maintenance jobs, by day.</p>
+      </div>
+      <div class="flex items-center gap-3">
+        <div class="bg-white p-1 rounded-xl flex border border-outline-variant">
+          <button type="button" id="calendarViewWeekBtn" data-action="setCalendarView" data-arg="week" class="px-4 py-2 rounded-lg font-label-bold text-[12px] transition-colors">Week</button>
+          <button type="button" id="calendarViewMonthBtn" data-action="setCalendarView" data-arg="month" class="px-4 py-2 rounded-lg font-label-bold text-[12px] transition-colors">Month</button>
+        </div>
+        <div class="flex items-center gap-1 bg-white border border-outline-variant rounded-xl p-1">
+          <button type="button" data-action="calendarStep" data-arg="-1" aria-label="Previous" class="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-surface-container-high transition-colors">
+            <span class="material-symbols-outlined text-[18px]" aria-hidden="true">chevron_left</span>
+          </button>
+          <button type="button" data-action="calendarToday" class="px-3 py-1.5 rounded-lg font-label-bold text-[11px] hover:bg-surface-container-high transition-colors">Today</button>
+          <button type="button" data-action="calendarStep" data-arg="1" aria-label="Next" class="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-surface-container-high transition-colors">
+            <span class="material-symbols-outlined text-[18px]" aria-hidden="true">chevron_right</span>
+          </button>
+        </div>
+      </div>
+    </div>
+    <p id="calendarRangeLabel" class="font-headline-sm text-headline-sm text-on-surface mb-4">—</p>
+    <div id="calendarGrid" class="grid grid-cols-7 gap-3 mb-6"></div>
+    <div id="calendarDayDetail" class="bg-surface-container-lowest rounded-3xl border border-outline-variant p-6 card-shadow"></div>
+  </div>
+
+  <!-- ─── PAGE: JOB BOARD (Kanban dispatch board) ─── -->
+  <div id="page-jobboard" class="page p-4 lg:p-8">
+    <div class="mb-6">
       <nav class="flex items-center gap-1.5 text-[11px] text-on-surface-variant mb-1" aria-label="Breadcrumb">
         <span>Admin</span><span class="material-symbols-outlined text-[13px]" aria-hidden="true">chevron_right</span>
-        <span class="text-primary font-medium">Service Packages</span>
+        <span class="text-primary font-medium">Job Board</span>
       </nav>
-      <h2 class="font-display-lg text-display-lg text-on-surface tracking-tight">Service Packages</h2>
-      <p class="text-on-surface-variant font-body-md mt-1">Configure and manage your wash and maintenance service tiers.</p>
+      <h2 class="font-display-lg text-display-lg text-on-surface tracking-tight">Job Board</h2>
+      <p class="text-on-surface-variant font-body-md mt-1">Drag a job card between columns to dispatch it. Showing today's jobs.</p>
     </div>
-    <div class="flex flex-col items-center justify-center h-80 bg-surface-container-lowest border border-outline-variant rounded-3xl card-shadow text-center p-6">
-      <div class="w-16 h-16 bg-secondary/10 rounded-2xl flex items-center justify-center text-secondary mb-4 overflow-hidden"><span class="material-symbols-outlined text-[32px]" aria-hidden="true">category</span></div>
-      <h3 class="font-headline-sm text-headline-sm text-on-surface mb-2">Service Packages Module</h3>
-      <p class="text-on-surface-variant text-[13px] max-w-sm">Configure tiered service offerings, set pricing, and manage upsell bundles for your customers.</p>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+      <div class="bg-surface-container-low/50 rounded-3xl border border-outline-variant p-4" data-kanban-column="unassigned">
+        <div class="flex items-center justify-between mb-3 px-1">
+          <h3 class="font-label-bold text-[12px] uppercase tracking-widest text-on-surface-variant">Unassigned</h3>
+          <span id="kanbanCountUnassigned" class="text-[11px] font-bold bg-surface-container-high text-on-surface-variant px-2 py-0.5 rounded-full">0</span>
+        </div>
+        <div id="kanbanColUnassigned" class="flex flex-col gap-3 min-h-[120px]"></div>
+      </div>
+      <div class="bg-surface-container-low/50 rounded-3xl border border-outline-variant p-4" data-kanban-column="in-progress">
+        <div class="flex items-center justify-between mb-3 px-1">
+          <h3 class="font-label-bold text-[12px] uppercase tracking-widest text-on-surface-variant">In Progress</h3>
+          <span id="kanbanCountInProgress" class="text-[11px] font-bold bg-primary-container/30 text-on-primary-container px-2 py-0.5 rounded-full">0</span>
+        </div>
+        <div id="kanbanColInProgress" class="flex flex-col gap-3 min-h-[120px]"></div>
+      </div>
+      <div class="bg-surface-container-low/50 rounded-3xl border border-outline-variant p-4" data-kanban-column="done">
+        <div class="flex items-center justify-between mb-3 px-1">
+          <h3 class="font-label-bold text-[12px] uppercase tracking-widest text-on-surface-variant">Done</h3>
+          <span id="kanbanCountDone" class="text-[11px] font-bold bg-primary/10 text-primary px-2 py-0.5 rounded-full">0</span>
+        </div>
+        <div id="kanbanColDone" class="flex flex-col gap-3 min-h-[120px]"></div>
+      </div>
     </div>
+  </div>
+
+  <!-- ─── PAGE: STAFF (directory + time clock) ─── -->
+  <div id="page-staff" class="page p-4 lg:p-8">
+    <div class="flex items-end justify-between gap-4 mb-6 flex-wrap">
+      <div>
+        <nav class="flex items-center gap-1.5 text-[11px] text-on-surface-variant mb-1" aria-label="Breadcrumb">
+          <span>Admin</span><span class="material-symbols-outlined text-[13px]" aria-hidden="true">chevron_right</span>
+          <span class="text-primary font-medium">Staff</span>
+        </nav>
+        <h2 class="font-display-lg text-display-lg text-on-surface tracking-tight">Staff</h2>
+        <p class="text-on-surface-variant font-body-md mt-1">Directory, shift schedules, and time clock.</p>
+      </div>
+      <div class="flex gap-3">
+        <div class="bg-white p-1 rounded-xl flex border border-outline-variant">
+          <button type="button" id="staffTabDirectoryBtn" data-action="setStaffTab" data-arg="directory" class="px-4 py-2 rounded-lg font-label-bold text-[12px] transition-colors">Directory</button>
+          <button type="button" id="staffTabTimeclockBtn" data-action="setStaffTab" data-arg="timeclock" class="px-4 py-2 rounded-lg font-label-bold text-[12px] transition-colors">Time Clock</button>
+        </div>
+        <button type="button" data-action="openNewStaffModal" class="primary-gradient text-white px-5 py-2.5 rounded-xl font-label-bold text-[12px] flex items-center gap-2 shadow hover:shadow-md transition-all active:scale-95">
+          <span class="material-symbols-outlined text-[16px]" aria-hidden="true">person_add</span> Add Staff
+        </button>
+      </div>
+    </div>
+    <div id="staffDirectoryView" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5"></div>
+    <div id="staffTimeclockView" class="hidden">
+      <div class="bg-surface-container-lowest rounded-3xl border border-outline-variant p-6 card-shadow mb-6">
+        <h3 class="font-headline-sm text-headline-sm text-on-surface mb-4">Clock In / Out</h3>
+        <form id="timeClockForm" class="flex flex-wrap items-end gap-3">
+          <div class="flex-1 min-w-[200px]">
+            <label for="timeClockStaffSelect" class="block text-[11px] font-label-bold text-on-surface-variant mb-1.5">Staff Member</label>
+            <select id="timeClockStaffSelect" class="w-full bg-surface-container-low border border-outline-variant rounded-xl px-3.5 py-2.5 text-[13px] focus:ring-2 focus:ring-primary-container outline-none"></select>
+          </div>
+          <button type="button" id="clockInBtn" class="bg-primary text-on-primary px-5 py-2.5 rounded-xl font-label-bold text-[12px] hover:opacity-90 transition-all">Clock In</button>
+          <button type="button" id="clockOutBtn" class="bg-surface-container-low border border-outline-variant text-on-surface px-5 py-2.5 rounded-xl font-label-bold text-[12px] hover:bg-surface-container transition-all">Clock Out</button>
+        </form>
+      </div>
+      <div class="bg-surface-container-lowest rounded-3xl border border-outline-variant overflow-hidden shadow-[0px_20px_40px_rgba(0,0,0,0.04)]">
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse">
+            <thead>
+              <tr class="bg-surface-container-low border-b border-outline-variant">
+                <th class="px-6 py-4 font-label-bold text-outline text-[11px] uppercase tracking-widest">Staff</th>
+                <th class="px-6 py-4 font-label-bold text-outline text-[11px] uppercase tracking-widest">Date</th>
+                <th class="px-6 py-4 font-label-bold text-outline text-[11px] uppercase tracking-widest">Clock In</th>
+                <th class="px-6 py-4 font-label-bold text-outline text-[11px] uppercase tracking-widest">Clock Out</th>
+                <th class="px-6 py-4 font-label-bold text-outline text-[11px] uppercase tracking-widest text-right">Hours</th>
+              </tr>
+            </thead>
+            <tbody id="timeClockTableBody" class="divide-y divide-outline-variant/30"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── PAGE: EQUIPMENT (wash-bay equipment maintenance) ─── -->
+  <div id="page-equipment" class="page p-4 lg:p-8">
+    <div class="flex items-end justify-between gap-4 mb-6 flex-wrap">
+      <div>
+        <nav class="flex items-center gap-1.5 text-[11px] text-on-surface-variant mb-1" aria-label="Breadcrumb">
+          <span>Admin</span><span class="material-symbols-outlined text-[13px]" aria-hidden="true">chevron_right</span>
+          <span class="text-primary font-medium">Equipment</span>
+        </nav>
+        <h2 class="font-display-lg text-display-lg text-on-surface tracking-tight">Equipment</h2>
+        <p class="text-on-surface-variant font-body-md mt-1">Wash-bay equipment status and service schedules.</p>
+      </div>
+      <button type="button" data-action="openNewEquipmentModal" class="primary-gradient text-white px-5 py-2.5 rounded-xl font-label-bold text-[12px] flex items-center gap-2 shadow hover:shadow-md transition-all active:scale-95">
+        <span class="material-symbols-outlined text-[16px]" aria-hidden="true">add</span> Add Equipment
+      </button>
+    </div>
+    <div id="equipmentGrid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5"></div>
   </div>
 
   <!-- ─── PAGE: MY JOBS TODAY (technician companion view) ─── -->
@@ -756,6 +915,10 @@
           <span id="detailClass" class="text-[12px] font-bold text-secondary truncate">Top 5% Spender</span>
         </div>
       </div>
+    </div>
+    <div>
+      <p class="font-label-bold text-[10px] text-on-surface-variant uppercase tracking-widest mb-3">Service History</p>
+      <div id="detailServiceHistoryList" class="space-y-2 max-h-56 overflow-y-auto"></div>
     </div>
     <div>
       <p class="font-label-bold text-[10px] text-on-surface-variant uppercase tracking-widest mb-3">Notes</p>
@@ -846,6 +1009,7 @@
 <script src="js/platform.js"></script>
 <script src="js/dropdown.js"></script>
 <script src="js/modals.js"></script>
+<script src="js/operations.js"></script>
 <script src="js/script.js"></script>
 </body>
 </html>
