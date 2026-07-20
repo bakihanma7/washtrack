@@ -57,6 +57,25 @@ test.describe('Mutations & persistence', () => {
     await expect(page.locator('#toastContainer')).toContainText('Test Customer Alpha');
   });
 
+  test('creating a new maintenance job persists its price (regression: this used to be silently dropped)', async ({ page }) => {
+    await page.goto('/?view=dashboard');
+    await page.locator('#page-dashboard [data-action="openNewJobModal"][data-arg="maintenance"]').click();
+
+    await page.locator('#njTitle').fill('Test Coolant Flush');
+    await page.locator('#njVehicle').fill('2023 Ford F-150 • Test Gray');
+    await page.locator('#njPrice').fill('89.00');
+
+    await page.locator('#newJobForm button[type="submit"]').click();
+    await expect(page).toHaveURL(/view=maintenance/);
+    await expect(page.locator('#toastContainer')).toContainText('Test Coolant Flush');
+
+    const price = await page.evaluate(() => {
+      const job = DATA.maintenanceJobs.find((j) => j.title === 'Test Coolant Flush');
+      return job ? job.price : null;
+    });
+    expect(price).toBe(89);
+  });
+
   test('required-field validation blocks submission with an empty form', async ({ page }) => {
     await page.goto('/?view=customers');
     await page.locator('#page-customers [data-action="openNewCustomerModal"]').click();

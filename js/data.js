@@ -176,35 +176,35 @@ const SEED_DATA = {
   maintenanceJobs: [
     { id: 'm01', title: 'Premium Synthetic Oil Change', customerId: 'c01', vehicle: 'Tesla Model S • Silver Frost • TX-2024',
       technician: 'Marcus Thorne', status: 'in-progress', statusLabel: 'In Progress', statusTone: 'primary',
-      start: '09:15 AM', date: seedDateOffset(0), note: 'ETA: 20 MINS', progress: 65, icon: 'directions_car', iconTone: 'primary' },
+      start: '09:15 AM', date: seedDateOffset(0), note: 'ETA: 20 MINS', progress: 65, price: 65.00, icon: 'directions_car', iconTone: 'primary' },
 
     { id: 'm02', title: 'Tire Rotation & Alignment', customerId: null, vehicle: 'Range Rover Sport • Arctic White • LUX-77',
       technician: 'Elena Vance', status: 'waitlist', statusLabel: 'Waitlist', statusTone: 'warning',
-      start: '09:40 AM', date: seedDateOffset(0), note: 'Starting at 10:15 AM', progress: null, icon: 'airport_shuttle', iconTone: 'secondary' },
+      start: '09:40 AM', date: seedDateOffset(0), note: 'Starting at 10:15 AM', progress: null, price: 65.00, icon: 'airport_shuttle', iconTone: 'secondary' },
 
     { id: 'm03', title: 'Comprehensive Battery Diagnostic', customerId: null, vehicle: 'Porsche 911 Carrera • GT Grey • FAST-911',
       technician: 'Sam Rivers', status: 'quality-control', statusLabel: 'Quality Control', statusTone: 'primary',
-      start: '08:30 AM', date: seedDateOffset(0), note: 'Finishing Shortly', progress: 95, icon: 'car_repair', iconTone: 'tertiary' },
+      start: '08:30 AM', date: seedDateOffset(0), note: 'Finishing Shortly', progress: 95, price: 120.00, icon: 'car_repair', iconTone: 'tertiary' },
 
     { id: 'm04', title: 'Brake Pad Replacement', customerId: 'c04', vehicle: 'Audi RS6 • Nardo Gray • AUD-552',
       technician: 'Marcus Thorne', status: 'waitlist', statusLabel: 'Waitlist', statusTone: 'warning',
-      start: '10:50 AM', date: seedDateOffset(1), note: 'Starting at 11:00 AM', progress: null, icon: 'directions_car', iconTone: 'primary' },
+      start: '10:50 AM', date: seedDateOffset(1), note: 'Starting at 11:00 AM', progress: null, price: 180.00, icon: 'directions_car', iconTone: 'primary' },
 
     { id: 'm05', title: 'Transmission Fluid Flush', customerId: null, vehicle: 'BMW X5 • Carbon Black • BMX-219',
       technician: 'Sam Rivers', status: 'in-progress', statusLabel: 'In Progress', statusTone: 'primary',
-      start: '10:05 AM', date: seedDateOffset(0), note: 'ETA: 45 MINS', progress: 40, icon: 'car_repair', iconTone: 'tertiary' },
+      start: '10:05 AM', date: seedDateOffset(0), note: 'ETA: 45 MINS', progress: 40, price: 150.00, icon: 'car_repair', iconTone: 'tertiary' },
 
     { id: 'm06', title: 'Full Synthetic Oil Change', customerId: 'c07', vehicle: 'Toyota Camry • Celestial Silver • TC-330',
       technician: 'Elena Vance', status: 'completed', statusLabel: 'Completed', statusTone: 'primary',
-      start: '01:45 PM', date: seedDateOffset(-1), note: 'Completed 2:30 PM', progress: 100, icon: 'directions_car', iconTone: 'primary' },
+      start: '01:45 PM', date: seedDateOffset(-1), note: 'Completed 2:30 PM', progress: 100, price: 65.00, icon: 'directions_car', iconTone: 'primary' },
 
     { id: 'm07', title: 'Wheel Alignment', customerId: 'c10', vehicle: 'Mazda CX-5 • Soul Red • MZ-771',
       technician: 'Marcus Thorne', status: 'completed', statusLabel: 'Completed', statusTone: 'primary',
-      start: '10:30 AM', date: seedDateOffset(-2), note: 'Completed 11:15 AM', progress: 100, icon: 'airport_shuttle', iconTone: 'secondary' },
+      start: '10:30 AM', date: seedDateOffset(-2), note: 'Completed 11:15 AM', progress: 100, price: 65.00, icon: 'airport_shuttle', iconTone: 'secondary' },
 
     { id: 'm08', title: 'Battery Replacement', customerId: 'c08', vehicle: 'Honda Civic • Sonic Gray • HC-118',
       technician: 'Sam Rivers', status: 'completed', statusLabel: 'Completed', statusTone: 'primary',
-      start: '09:10 AM', date: seedDateOffset(-3), note: 'Completed 9:50 AM', progress: 100, icon: 'car_repair', iconTone: 'tertiary' },
+      start: '09:10 AM', date: seedDateOffset(-3), note: 'Completed 9:50 AM', progress: 100, price: 120.00, icon: 'car_repair', iconTone: 'tertiary' },
   ],
 
   expenses: [
@@ -462,7 +462,7 @@ function createCarwashJob({ customer, customerId, vehicle, service, technician, 
 }
 
 /* ---- Create: Maintenance Job ---- */
-function createMaintenanceJob({ title, customerId, vehicle, technician, status, start, date, note }) {
+function createMaintenanceJob({ title, customerId, vehicle, technician, status, start, date, note, price }) {
   const labelByStatus = { 'in-progress': 'In Progress', 'waitlist': 'Waitlist', 'quality-control': 'Quality Control', 'completed': 'Completed' };
   const toneByStatus = { 'in-progress': 'primary', 'waitlist': 'warning', 'quality-control': 'primary', 'completed': 'primary' };
   const job = {
@@ -476,6 +476,7 @@ function createMaintenanceJob({ title, customerId, vehicle, technician, status, 
     date: date || todayISO(),
     note: note || '',
     progress: status === 'completed' ? 100 : (status === 'in-progress' ? 10 : null),
+    price: Number(price) || 0,
     icon: 'directions_car', iconTone: 'primary',
   };
   DATA.maintenanceJobs.unshift(job);

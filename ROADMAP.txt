@@ -118,15 +118,24 @@ Business & Fleet Tools
 24. Audit log of staff actions (who changed a price, who cancelled a
     job, when).
 
-Reporting & Intelligence
+Reporting & Intelligence [DONE - v2.7]
 -------------
-25. A real Reports module with charts — revenue trends, job volume over
-    time, technician performance, service-mix trends (the Reports nav
-    item currently just shows a "coming soon" toast).
-26. Exportable PDF/Excel reports, not just the in-app charts.
-27. Predictive inventory reordering (forecast when stock will run out
-    based on booking trends, instead of a static "5 left" warning).
-28. Demand forecasting — suggest staffing levels for upcoming busy days.
+25. [x] A real Reports module with charts — revenue trends, job volume
+    over time, technician performance, service-mix trends, computed
+    live from js/data.js instead of a "coming soon" toast.
+26. [x] Exportable reports: per-table CSV downloads (genuinely
+    Excel-openable) plus a "Print / Save as PDF" button using a
+    dedicated print stylesheet — the honest static-site route to a
+    real PDF, since there's no backend to render one server-side.
+27. [x] Predictive inventory reordering — projects days-until-reorder
+    per item from recent booking volume by supply category. Explicitly
+    labeled as a heuristic estimate in the UI: there's no backend to
+    track actual per-job consumption, so this is a directional signal,
+    not a measurement.
+28. [x] Demand forecasting — weekday-average job volume projected over
+    the next 7 days, compared against currently scheduled staff to
+    flag understaffed days. Sharpens as more real jobs accumulate;
+    the UI notes when the sample size is still thin.
 
 Platform & Access [DONE - v2.5]
 -------------

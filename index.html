@@ -133,8 +133,8 @@
   </button>
 
   <div class="pt-3 border-t border-outline-variant flex flex-col gap-1">
-    <button type="button" id="navReports" data-action="toast" data-arg="Reports module coming soon." class="flex items-center justify-center lg:justify-start gap-3 px-0 lg:px-4 py-2.5 rounded-xl text-on-surface-variant hover:bg-surface-variant select-none w-full overflow-hidden" title="Reports">
-      <span class="material-symbols-outlined text-[20px]" aria-hidden="true">bar_chart</span>
+    <button type="button" class="nav-item flex items-center justify-center lg:justify-start gap-3 px-0 lg:px-4 py-2.5 rounded-xl text-on-surface-variant hover:bg-surface-variant select-none w-full overflow-hidden" data-page="reports" title="Reports">
+      <span class="material-symbols-outlined nav-icon text-[20px]" aria-hidden="true">bar_chart</span>
       <span class="text-body-md hidden lg:inline">Reports</span>
     </button>
     <button type="button" data-action="openSettingsModal" class="flex items-center justify-center lg:justify-start gap-3 px-0 lg:px-4 py-2.5 rounded-xl text-on-surface-variant hover:bg-surface-variant select-none w-full overflow-hidden" title="Settings">
@@ -843,6 +843,153 @@
     <div id="equipmentGrid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5"></div>
   </div>
 
+  <!-- ─── PAGE: REPORTS (Reporting & Intelligence) ─── -->
+  <div id="page-reports" class="page p-4 lg:p-8">
+    <div id="reportsPrintHeader" class="hidden print:block mb-6">
+      <h2 class="font-display-lg text-headline-md text-on-surface">WashTrack Pro — Business Report</h2>
+      <p id="reportsPrintDate" class="text-on-surface-variant text-[12px] mt-1"></p>
+    </div>
+
+    <div class="flex items-end justify-between gap-4 mb-6 flex-wrap print:hidden">
+      <div>
+        <nav class="flex items-center gap-1.5 text-[11px] text-on-surface-variant mb-1" aria-label="Breadcrumb">
+          <span>Admin</span><span class="material-symbols-outlined text-[13px]" aria-hidden="true">chevron_right</span>
+          <span class="text-primary font-medium">Reports</span>
+        </nav>
+        <h2 class="font-display-lg text-display-lg text-on-surface tracking-tight">Reports</h2>
+        <p class="text-on-surface-variant font-body-md mt-1">Revenue, job volume, technician performance, and forward-looking forecasts.</p>
+      </div>
+      <div class="flex items-center gap-3">
+        <div id="reportsRangeMount"></div>
+        <button type="button" data-action="reportsPrint" class="bg-surface-container-lowest border border-outline-variant px-5 py-2.5 rounded-xl font-label-bold text-[12px] text-on-surface flex items-center gap-2 hover:bg-surface-container-low transition-colors shadow-sm">
+          <span class="material-symbols-outlined text-[16px]" aria-hidden="true">print</span> Print / Save as PDF
+        </button>
+      </div>
+    </div>
+
+    <!-- Revenue Trend + Job Volume -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-5 mb-5 print:grid-cols-1">
+      <div class="bg-surface-container-lowest border border-outline-variant rounded-3xl p-6 card-shadow">
+        <div class="flex items-start justify-between gap-4 mb-1">
+          <div>
+            <h3 class="font-headline-sm text-headline-sm text-on-surface">Revenue Trend</h3>
+            <p class="text-[11px] text-on-surface-variant">Car wash + maintenance revenue by day</p>
+          </div>
+          <button type="button" id="reportsRevenueExportBtn" class="print:hidden p-2 rounded-lg border border-outline-variant hover:bg-surface-container-low transition-colors shrink-0" aria-label="Export revenue trend as CSV" title="Export CSV">
+            <span class="material-symbols-outlined text-[16px] text-on-surface-variant" aria-hidden="true">file_download</span>
+          </button>
+        </div>
+        <div class="flex items-baseline gap-3 mb-3">
+          <span id="reportsRevenueTotal" class="font-stat-value text-stat-value text-on-surface">$0.00</span>
+          <span id="reportsRevenueAvg" class="text-[12px] text-on-surface-variant">$0.00 / day</span>
+        </div>
+        <div id="reportsRevenueChart"></div>
+      </div>
+
+      <div class="bg-surface-container-lowest border border-outline-variant rounded-3xl p-6 card-shadow">
+        <div class="flex items-start justify-between gap-4 mb-4">
+          <div>
+            <h3 class="font-headline-sm text-headline-sm text-on-surface">Job Volume</h3>
+            <p class="text-[11px] text-on-surface-variant">Jobs booked per day, by category</p>
+          </div>
+        </div>
+        <div id="reportsJobVolumeChart"></div>
+      </div>
+    </div>
+
+    <!-- Service Mix + Technician Performance -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-5 mb-5 print:grid-cols-1">
+      <div class="bg-surface-container-lowest border border-outline-variant rounded-3xl p-6 card-shadow">
+        <div class="flex items-start justify-between gap-4 mb-6">
+          <h3 class="font-headline-sm text-headline-sm text-on-surface">Service Mix</h3>
+          <button type="button" id="reportsServiceMixExportBtn" class="print:hidden p-2 rounded-lg border border-outline-variant hover:bg-surface-container-low transition-colors shrink-0" aria-label="Export service mix as CSV" title="Export CSV">
+            <span class="material-symbols-outlined text-[16px] text-on-surface-variant" aria-hidden="true">file_download</span>
+          </button>
+        </div>
+        <div class="flex justify-center mb-6" id="reportsServiceMixDonut"></div>
+        <div id="reportsServiceMixLegend" class="mb-5"></div>
+        <p class="font-label-bold text-[10px] text-on-surface-variant uppercase tracking-widest mb-3">By Service</p>
+        <div id="reportsServiceBreakdownList"></div>
+      </div>
+
+      <div class="bg-surface-container-lowest border border-outline-variant rounded-3xl overflow-hidden card-shadow">
+        <div class="p-6 pb-4 flex items-start justify-between gap-4">
+          <h3 class="font-headline-sm text-headline-sm text-on-surface">Technician Performance</h3>
+          <button type="button" id="reportsTechExportBtn" class="print:hidden p-2 rounded-lg border border-outline-variant hover:bg-surface-container-low transition-colors shrink-0" aria-label="Export technician performance as CSV" title="Export CSV">
+            <span class="material-symbols-outlined text-[16px] text-on-surface-variant" aria-hidden="true">file_download</span>
+          </button>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse">
+            <thead>
+              <tr class="bg-surface-container-low/30">
+                <th class="px-4 py-3 font-label-bold text-[10px] text-on-surface-variant uppercase tracking-wider">Technician</th>
+                <th class="px-4 py-3 font-label-bold text-[10px] text-on-surface-variant uppercase tracking-wider">Jobs</th>
+                <th class="px-4 py-3 font-label-bold text-[10px] text-on-surface-variant uppercase tracking-wider">Revenue</th>
+                <th class="px-4 py-3 font-label-bold text-[10px] text-on-surface-variant uppercase tracking-wider">Avg / Job</th>
+              </tr>
+            </thead>
+            <tbody id="reportsTechTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Predictive Inventory Reordering -->
+    <div class="bg-surface-container-lowest border border-outline-variant rounded-3xl overflow-hidden card-shadow mb-5">
+      <div class="p-6 pb-4 flex items-start justify-between gap-4">
+        <div>
+          <h3 class="font-headline-sm text-headline-sm text-on-surface">Predictive Inventory Reordering</h3>
+          <p class="text-[11px] text-on-surface-variant mt-1 max-w-2xl">Projected from recent booking volume by supply category — a directional estimate, not a measurement of actual usage (this static app has no backend to track real consumption).</p>
+        </div>
+        <button type="button" id="reportsInventoryExportBtn" class="print:hidden p-2 rounded-lg border border-outline-variant hover:bg-surface-container-low transition-colors shrink-0" aria-label="Export inventory forecast as CSV" title="Export CSV">
+          <span class="material-symbols-outlined text-[16px] text-on-surface-variant" aria-hidden="true">file_download</span>
+        </button>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse">
+          <thead>
+            <tr class="bg-surface-container-low/30">
+              <th class="px-4 py-3 font-label-bold text-[10px] text-on-surface-variant uppercase tracking-wider">Item</th>
+              <th class="px-4 py-3 font-label-bold text-[10px] text-on-surface-variant uppercase tracking-wider">Est. Time Left</th>
+              <th class="px-4 py-3 font-label-bold text-[10px] text-on-surface-variant uppercase tracking-wider">Projected Reorder Date</th>
+              <th class="px-4 py-3 font-label-bold text-[10px] text-on-surface-variant uppercase tracking-wider text-right">Status</th>
+            </tr>
+          </thead>
+          <tbody id="reportsInventoryForecastBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Demand Forecasting -->
+    <div class="bg-surface-container-lowest border border-outline-variant rounded-3xl overflow-hidden card-shadow">
+      <div class="p-6 pb-4 flex items-start justify-between gap-4">
+        <div>
+          <h3 class="font-headline-sm text-headline-sm text-on-surface">Demand Forecast — Next 7 Days</h3>
+          <p id="reportsDemandForecastNote" class="text-[11px] text-on-surface-variant mt-1 max-w-2xl"></p>
+        </div>
+        <button type="button" id="reportsDemandExportBtn" class="print:hidden p-2 rounded-lg border border-outline-variant hover:bg-surface-container-low transition-colors shrink-0" aria-label="Export demand forecast as CSV" title="Export CSV">
+          <span class="material-symbols-outlined text-[16px] text-on-surface-variant" aria-hidden="true">file_download</span>
+        </button>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse">
+          <thead>
+            <tr class="bg-surface-container-low/30">
+              <th class="px-4 py-3 font-label-bold text-[10px] text-on-surface-variant uppercase tracking-wider">Date</th>
+              <th class="px-4 py-3 font-label-bold text-[10px] text-on-surface-variant uppercase tracking-wider">Day</th>
+              <th class="px-4 py-3 font-label-bold text-[10px] text-on-surface-variant uppercase tracking-wider">Predicted Jobs</th>
+              <th class="px-4 py-3 font-label-bold text-[10px] text-on-surface-variant uppercase tracking-wider">Recommended Techs</th>
+              <th class="px-4 py-3 font-label-bold text-[10px] text-on-surface-variant uppercase tracking-wider">Scheduled Techs</th>
+              <th class="px-4 py-3 font-label-bold text-[10px] text-on-surface-variant uppercase tracking-wider text-right">Status</th>
+            </tr>
+          </thead>
+          <tbody id="reportsDemandForecastBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
   <!-- ─── PAGE: MY JOBS TODAY (technician companion view) ─── -->
   <div id="page-myjobs" class="page p-4 lg:p-8">
     <div class="max-w-xl mx-auto w-full">
@@ -1010,6 +1157,7 @@
 <script src="js/dropdown.js"></script>
 <script src="js/modals.js"></script>
 <script src="js/operations.js"></script>
+<script src="js/reports.js"></script>
 <script src="js/script.js"></script>
 </body>
 </html>

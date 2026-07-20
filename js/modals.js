@@ -308,6 +308,7 @@ function openNewJobModal(defaultType) {
         textFieldHtml({ id: 'njTitle', label: 'Job Title', placeholder: 'e.g. Full Synthetic Oil Change', required: true, autofocus: true }) +
         textFieldHtml({ id: 'njVehicle', label: 'Vehicle', placeholder: 'e.g. Audi RS6 • Nardo Gray • AUD-552', required: true }) +
         dropdownFieldHtml({ id: 'njTechnician', label: 'Technician' }) +
+        textFieldHtml({ id: 'njPrice', label: 'Price ($)', placeholder: 'e.g. 65.00', type: 'number', required: true }) +
         dropdownFieldHtml({ id: 'njStatus', label: 'Status', required: true }) +
         textFieldHtml({ id: 'njStart', label: 'Start Time', placeholder: 'e.g. 09:15 AM' }) +
         textFieldHtml({ id: 'njDate', label: 'Date', type: 'date' }) +
@@ -319,7 +320,12 @@ function openNewJobModal(defaultType) {
         value: '', ariaLabel: 'Package',
         buttonClass: 'w-full flex items-center justify-between gap-2 bg-surface-container-low border border-outline-variant rounded-xl px-3.5 py-2.5 text-[13px] focus:ring-2 focus:ring-primary-container outline-none',
         listboxClass: 'hidden absolute z-20 mt-1 w-full bg-surface-container-lowest border border-outline-variant rounded-xl shadow-lg py-1 max-h-52 overflow-y-auto',
-        onChange: (name) => { if (name) document.getElementById('njTitle').value = name; },
+        onChange: (name) => {
+          if (!name) return;
+          document.getElementById('njTitle').value = name;
+          const pkg = maintPackages.find(p => p.name === name);
+          if (pkg) { const priceEl = document.getElementById('njPrice'); if (priceEl) priceEl.value = pkg.price.toFixed(2); }
+        },
       });
       document.getElementById('njPackage-mount').appendChild(packageDropdown.root);
 
@@ -380,9 +386,11 @@ function openNewJobModal(defaultType) {
     } else {
       const titleEl = document.getElementById('njTitle');
       const vehicleEl = document.getElementById('njVehicle');
+      const priceEl = document.getElementById('njPrice');
       const okTitle = validateRequired(titleEl, 'Job title');
       const okVehicle = validateRequired(vehicleEl, 'Vehicle');
-      if (!okTitle || !okVehicle) return;
+      const okPrice = validatePositiveNumber(priceEl, 'Price');
+      if (!okTitle || !okVehicle || !okPrice) return;
 
       const job = createMaintenanceJob({
         title: titleEl.value.trim(),
@@ -393,6 +401,7 @@ function openNewJobModal(defaultType) {
         start: document.getElementById('njStart').value.trim() || '--:--',
         date: document.getElementById('njDate').value || todayISO(),
         note: document.getElementById('njNote').value.trim(),
+        price: priceEl.value,
       });
       closeModal();
       toast('New maintenance job created: ' + job.title + '.');

@@ -17,8 +17,8 @@ const ROLE_LABELS = { admin: 'Admin', manager: 'Manager', technician: 'Technicia
    exists for technicians — a stripped, mobile-friendly "my jobs
    today" list. Admins and managers use the full set of views. */
 const ROLE_PAGES = {
-  admin: ['dashboard', 'calendar', 'carwash', 'maintenance', 'jobboard', 'customers', 'inventory', 'packages', 'staff', 'equipment'],
-  manager: ['dashboard', 'calendar', 'carwash', 'maintenance', 'jobboard', 'customers', 'inventory', 'packages', 'staff', 'equipment'],
+  admin: ['dashboard', 'calendar', 'carwash', 'maintenance', 'jobboard', 'customers', 'inventory', 'packages', 'staff', 'equipment', 'reports'],
+  manager: ['dashboard', 'calendar', 'carwash', 'maintenance', 'jobboard', 'customers', 'inventory', 'packages', 'staff', 'equipment', 'reports'],
   technician: ['myjobs', 'carwash', 'maintenance'],
 };
 
@@ -127,8 +127,6 @@ function applyRoleGating(role) {
     const page = btn.dataset.page;
     btn.classList.toggle('hidden', !allowed.includes(page));
   });
-  const reportsBtn = document.getElementById('navReports');
-  if (reportsBtn) reportsBtn.classList.toggle('hidden', role === 'technician');
   document.body.setAttribute('data-role', role);
 }
 

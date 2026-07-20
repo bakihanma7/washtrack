@@ -187,6 +187,7 @@ const ACTIONS = {
   calendarStep: (arg) => calendarStep(Number(arg)),
   calendarToday: () => calendarToday(),
   setStaffTab: (arg) => setStaffTab(arg),
+  reportsPrint: () => reportsPrint(),
 };
 
 document.addEventListener('click', (e) => {
@@ -559,6 +560,7 @@ function renderActiveView() {
   else if (state.view === 'jobboard' && typeof renderJobBoard === 'function') renderJobBoard();
   else if (state.view === 'staff' && typeof renderStaffPage === 'function') renderStaffPage();
   else if (state.view === 'equipment' && typeof renderEquipment === 'function') renderEquipment();
+  else if (state.view === 'reports' && typeof renderReports === 'function') renderReports();
 }
 
 /* ============================================================

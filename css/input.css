@@ -193,3 +193,18 @@ html { overflow-x: hidden; }
 html[data-auth="out"] #authScreen { display: flex; }
 html[data-auth="out"] #appShell { display: none; }
 
+/* ==========================================================
+   Print report — used by the Reports page's "Print / Save as
+   PDF" button (window.print()). Hides the app chrome (sidebar,
+   top bar, toasts, any open modal/panel) and lays out only the
+   Reports page content for a clean printed/PDF page.
+   ========================================================== */
+@media print {
+  aside, header, #toastContainer, #modalOverlay, #detailPanel, #jobDetailPanel { display: none !important; }
+  main { margin-left: 0 !important; margin-top: 0 !important; }
+  #page-reports { display: block !important; }
+  body :not(#page-reports):not(#page-reports *) { visibility: hidden; }
+  #page-reports, #page-reports * { visibility: visible; }
+  #page-reports { position: absolute; left: 0; top: 0; width: 100%; }
+}
+
