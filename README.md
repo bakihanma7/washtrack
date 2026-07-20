@@ -4,6 +4,51 @@ A single-page admin dashboard for managing a car wash and automotive maintenance
 business — Executive Dashboard, Car Wash Jobs, Maintenance Jobs, and Customer
 Management.
 
+## Status: v2.6 — Core Operations
+
+Building on v2.5, this update implements the "Core Operations" section of
+`ROADMAP.txt` (items #1–#8), all in a new `js/operations.js`:
+
+- **Inventory (#1).** Full CRUD — add/edit/delete/restock — with supplier
+  info and reorder thresholds. The dashboard's "Critical Stock" widget,
+  previously three hardcoded rows, now reads live from `DATA.inventory`.
+- **Service Packages (#2).** Full CRUD with wash/maintenance categories and
+  an active/inactive toggle. The New Job modal's Service dropdown is now
+  package-driven — picking a package autofills price — and maintenance jobs
+  can optionally start from a package too.
+- **Calendar (#3).** Week and month views over car wash + maintenance jobs,
+  which now carry a `date` field. Day cells show job "chips"; clicking a day
+  (or a chip) opens an agenda / the existing job detail panel.
+- **Job Board (#4).** A drag-and-drop Kanban board (Unassigned → In Progress
+  → Done) over today's jobs, using native HTML5 drag-and-drop. Dragging a
+  job into In Progress without a technician prompts you to pick one from
+  the staff roster before the move completes.
+- **Vehicle Service History (#5).** A chronological timeline in the customer
+  detail panel, backed by a new `customerId` field on jobs. Existing seed
+  jobs were backfilled where the customer name/vehicle matched confidently;
+  where it didn't, they're left unlinked rather than guessing — new jobs
+  created through the (now customer-linkable) New Job modal populate this
+  going forward.
+- **Staff directory (#6).** An independent roster — deliberately separate
+  from the login accounts in `js/auth.js`, so a technician doesn't need to
+  ever sign in to show up here. Profiles include role, contact info,
+  certifications, and a 7-day shift schedule; full CRUD plus
+  activate/deactivate.
+- **Time clock (#7).** Clock in/out per staff member, with a log table that
+  computes hours worked per entry.
+- **Equipment (#8).** Wash-bay equipment (wash units, vacuums, lifts, etc.)
+  with operational/needs-service/down status, a service interval, and a
+  one-click "Log Service" action that resets the next-due date.
+
+`js/data.js` gained `inventory`, `packages`, `staff`, `timeClock`, and
+`equipment` arrays, plus `date`/`customerId` fields on carwash/maintenance
+jobs (with a `loadData()` migration so existing saved sessions pick up the
+new fields automatically). `js/modals.js`'s New Job modal was reworked to
+link an optional customer, draw its Technician list from the staff roster
+instead of free text, and set a job date. `ROLE_PAGES` in `js/auth.js` was
+updated so Admin/Manager can reach all the new pages; the Technician role's
+stripped-down view is unchanged.
+
 ## Status: v2.5 — Platform & Access
 
 Building on v2.4, this update implements the "Platform & Access" section of

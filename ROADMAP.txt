@@ -66,22 +66,26 @@ Polish & Accessibility  [DONE — see README "Status: v2.4"]
 35 NEW FEATURES (net-new capability)
 ===================================================================
 
-Core Operations
+Core Operations [DONE - v2.6]
 -------------
-1. Build out the Inventory module for real (currently a placeholder):
-   add/edit/delete stock items, supplier info, reorder thresholds.
-2. Build out the Service Packages module for real: create/edit pricing
-   tiers and bundles, attach them to jobs.
-3. Full calendar/booking view (week & month) — the current "Today" widget
-   only shows a single day.
-4. Drag-and-drop job assignment board (Kanban-style: Unassigned → In
-   Progress → Done) for dispatching technicians.
-5. Vehicle service history timeline per customer — every past job for
-   every vehicle they own, not just the "last visit" snapshot.
-6. Technician/staff directory — profiles, shift schedules, certifications.
-7. Time clock / attendance tracking for staff.
-8. Equipment maintenance tracking — for the wash bay equipment itself,
-   separate from customer vehicle maintenance jobs.
+1. [x] Inventory module — full CRUD, supplier info, reorder
+   thresholds; dashboard Critical Stock widget now reads real data.
+2. [x] Service Packages module — full CRUD, wash/maintenance
+   categories, attached to jobs via the New Job modal's
+   package-driven Service dropdown.
+3. [x] Full calendar/booking view (week & month), backed by a new
+   `date` field on jobs.
+4. [x] Drag-and-drop Job Board (Unassigned → In Progress → Done),
+   prompting for a technician from the staff roster on dispatch.
+5. [x] Vehicle service history timeline per customer, backed by a
+   new `customerId` link on jobs.
+6. [x] Staff directory — profiles, shift schedules, certifications.
+   Independent of login accounts by design (a staff member doesn't
+   need to ever sign in to WashTrack Pro to show up here).
+7. [x] Time clock / attendance tracking — clock in/out per staff
+   member with a computed-hours log.
+8. [x] Equipment maintenance tracking — wash-bay equipment with
+   status, service interval, and next-due date.
 
 Customer Experience
 -------------
